@@ -2,11 +2,11 @@
 // https://github.com/LiarPrincess/Violet
 
 import XCTest
-@testable import BigInt
+@testable import SwiftNumber
 
 // MARK: - Asserts
 
-internal func XCTAssertWords(_ value: BigInt,
+internal func XCTAssertWords(_ value: SNumber,
                              _ expected: [UInt],
                              file: StaticString = #file,
                              line: UInt = #line) {
@@ -61,7 +61,7 @@ internal enum WordsTestCases {
 
   // MARK: - Heap positive
 
-  internal typealias Word = BigInt.Word
+  internal typealias Word = SNumber.Word
 
   internal typealias HeapTestCase = (words: [Word], expected: [UInt])
 

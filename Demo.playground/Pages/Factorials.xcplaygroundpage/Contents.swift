@@ -1,9 +1,9 @@
 //: [Previous](@previous)
 import Foundation
-import BigInt
+import SwiftNumber
 //: The canonical way to demo big integers is with the factorial function. Here is a fancy definition for it:
-func fact(_ n: Int) -> BigInt {
-    return (1 ... n).map { BigInt($0) }.reduce(BigInt(1), *)
+func fact(_ n: Int) -> SNumber {
+    return (1 ... n).map { SNumber($0) }.reduce(SNumber(1), *)
 }
 
 let f1 = fact(1)
@@ -16,7 +16,7 @@ let f1000 = fact(1000)
 //: That last value seems quite large. Just how many decimal digits is it? Let's convert it to a `String` to find out.
 let decimal = String(f1000)
 let digitCount = decimal.count
-//: Wow. 2500 digits is peanuts for `BigInt`, but Xcode's playground tech isn't designed to perform well with much more loop iterations, so let's stay at this level for now.
+//: Wow. 2500 digits is peanuts for `SNumber`, but Xcode's playground tech isn't designed to perform well with much more loop iterations, so let's stay at this level for now.
 let ff2 = f1000 * f1000
 String(ff2).count
 

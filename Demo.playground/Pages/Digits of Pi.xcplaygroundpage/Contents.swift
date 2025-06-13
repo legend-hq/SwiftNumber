@@ -1,16 +1,16 @@
 //: [Previous](@previous)
-import BigInt
+import SwiftNumber
 //: ## Let's calculate the first thousand digits of π
 //:
-//: A fun application of BigInts is generating the digits of π.
+//: A fun application of `Number`s is generating the digits of π.
 //: Let's implement [Jeremy Gibbon's spigot algorithm][spigot] as an infinite `GeneratorType`. 
 //: This is a quite slow algorithm, but it makes up for it with its grooviness factor.
 //:
 //: [spigot]: http://www.cs.ox.ac.uk/jeremy.gibbons/publications/spigot.pdf
 func digitsOfPi() -> AnyIterator<Int> {
-    var q: BigUInt = 1
-    var r: BigUInt = 180
-    var t: BigUInt = 60
+    var q: Number = 1
+    var r: Number = 180
+    var t: Number = 60
     var i: UInt = 2 // Works until digit #826_566_842
     return AnyIterator {
         let u: UInt = 3 * (3 * i + 1) * (3 * i + 2)

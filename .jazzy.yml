@@ -1,8 +1,8 @@
-module: BigInt
-author: Károly Lőrentey
+module: SwiftNumber
+author: Károly Lőrentey, Legend Labs, Inc
 theme: fullwidth
 output: ./docs
-author_url: "https://twitter.com/lorentey"
-github_url: "https://github.com/attaswift/BigInt"
-root_url: "https://attaswift.github.io/BigInt/reference/" 
-xcodebuild_arguments: ["-workspace", "BigInt.xcworkspace", "-scheme", "BigInt-macOS"]
+author_url: "https://x.com/joinlegend"
+github_url: "https://github.com/legend-hq/SwiftNumber"
+root_url: "https://legend-hq.github.io/SwiftNumber/reference/" 
+xcodebuild_arguments: ["-workspace", "SwiftNumber.xcworkspace", "-scheme", "SwiftNumber-macOS"]

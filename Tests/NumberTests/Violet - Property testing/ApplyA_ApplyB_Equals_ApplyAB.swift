@@ -2,32 +2,32 @@
 // https://github.com/LiarPrincess/Violet
 
 import XCTest
-@testable import BigInt
+@testable import SwiftNumber
 
 // swiftlint:disable type_name
 
-private typealias Word = BigInt.Word
+private typealias Word = SNumber.Word
 
 // MARK: - Test case
 
 /// `(x + a) + b = x + c`
 private struct TestCase {
 
-  fileprivate typealias Operation = (BigInt, BigInt) -> BigInt
+  fileprivate typealias Operation = (SNumber, SNumber) -> SNumber
 
-  fileprivate let a: BigInt
-  fileprivate let b: BigInt
-  fileprivate let c: BigInt
+  fileprivate let a: SNumber
+  fileprivate let b: SNumber
+  fileprivate let c: SNumber
 
   fileprivate init<A: BinaryInteger, B: BinaryInteger>(_ op: Operation, a: A, b: B) {
-    self.a = BigInt(a)
-    self.b = BigInt(b)
+    self.a = SNumber(a)
+    self.b = SNumber(b)
     self.c = op(self.a, self.b)
   }
 
   fileprivate init(_ op: Operation, a: String, b: String) {
-    self.a = BigInt(a)!
-    self.b = BigInt(b)!
+    self.a = SNumber(a)!
+    self.b = SNumber(b)!
     self.c = op(self.a, self.b)
   }
 }
@@ -70,7 +70,7 @@ private func createTestCases(_ op: TestCase.Operation,
 /// `(x >> a) >> b = x >> (a + b)`.
 class ApplyA_ApplyB_Equals_ApplyAB: XCTestCase {
 
-  private lazy var values = generateBigIntValues(countButNotReally: 20)
+  private lazy var values = generateSNumberValues(countButNotReally: 20)
 
   // MARK: - Add
 
@@ -83,7 +83,7 @@ class ApplyA_ApplyB_Equals_ApplyAB: XCTestCase {
 
   private let addTestCases = createTestCases(+)
 
-  private func addTest(value: BigInt,
+  private func addTest(value: SNumber,
                        file: StaticString = #file,
                        line: UInt = #line) {
     for testCase in self.addTestCases {
@@ -128,7 +128,7 @@ class ApplyA_ApplyB_Equals_ApplyAB: XCTestCase {
   // '+' because we need to add a + b
   private let subTestCases = createTestCases(+)
 
-  private func subTest(value: BigInt,
+  private func subTest(value: SNumber,
                        file: StaticString = #file,
                        line: UInt = #line) {
     for testCase in self.subTestCases {
@@ -172,7 +172,7 @@ class ApplyA_ApplyB_Equals_ApplyAB: XCTestCase {
 
   private let mulTestCases = createTestCases(*, useBigNumbers: false)
 
-  private func mulTest(value: BigInt,
+  private func mulTest(value: SNumber,
                        file: StaticString = #file,
                        line: UInt = #line) {
     for testCase in self.mulTestCases {
@@ -221,7 +221,7 @@ class ApplyA_ApplyB_Equals_ApplyAB: XCTestCase {
     TestCase(*, a: "-3", b: "-5")
   ]
 
-  private func divTest(value: BigInt,
+  private func divTest(value: SNumber,
                        file: StaticString = #file,
                        line: UInt = #line) {
     for testCase in self.divTestCases {
@@ -278,7 +278,7 @@ class ApplyA_ApplyB_Equals_ApplyAB: XCTestCase {
     TestCase(+, a: Word.bitWidth - 5, b: 7)
   ]
 
-  private func shiftLeftTest(value: BigInt,
+  private func shiftLeftTest(value: SNumber,
                              file: StaticString = #file,
                              line: UInt = #line) {
     for testCase in self.shiftLeftTestCases {
@@ -337,7 +337,7 @@ class ApplyA_ApplyB_Equals_ApplyAB: XCTestCase {
     TestCase(+, a: Word.bitWidth - 5, b: 7)
   ]
 
-  private func shiftRightTest(value: BigInt,
+  private func shiftRightTest(value: SNumber,
                               file: StaticString = #file,
                               line: UInt = #line) {
     for testCase in self.shiftRightTestCases {
@@ -372,7 +372,7 @@ class ApplyA_ApplyB_Equals_ApplyAB: XCTestCase {
 
   // MARK: - Helpers
 
-  private func create(_ p: BigIntPrototype) -> BigInt {
+  private func create(_ p: SNumberPrototype) -> SNumber {
     return p.create()
   }
 }

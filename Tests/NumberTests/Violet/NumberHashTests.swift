@@ -2,17 +2,17 @@
 // https://github.com/LiarPrincess/Violet
 
 import XCTest
-@testable import BigInt
+@testable import SwiftNumber
 
 // Well… actually… hash and equatable
-class BigIntHashTests: XCTestCase {
+class SNumberHashTests: XCTestCase {
 
   private let smis = generateIntValues(countButNotReally: 50)
-  private let heaps = generateBigIntValues(countButNotReally: 50)
+  private let heaps = generateSNumberValues(countButNotReally: 50)
 
   // Values that are in both `smis` and `heaps`.
-  private lazy var common: [BigInt] = {
-    var result = [BigInt]()
+  private lazy var common: [SNumber] = {
+    var result = [SNumber]()
     let smiSet = Set(self.smis)
 
     for p in self.heaps {
@@ -36,7 +36,7 @@ class BigIntHashTests: XCTestCase {
 
   func test_set_insertAndFind() {
     // Insert all of the values
-    var set = Set<BigInt>()
+    var set = Set<SNumber>()
     self.insert(&set, values: self.smis)
     self.insert(&set, values: self.heaps)
 
@@ -57,7 +57,7 @@ class BigIntHashTests: XCTestCase {
 
   func test_set_insertAndRemove() {
     // Insert all of the values
-    var set = Set<BigInt>()
+    var set = Set<SNumber>()
     self.insert(&set, values: self.smis)
     self.insert(&set, values: self.heaps)
 
@@ -91,7 +91,7 @@ class BigIntHashTests: XCTestCase {
 
   func test_dict_insertAndFind() {
     // Insert all of the numbers to dict
-    var dict = [BigInt: UnicodeScalar]()
+    var dict = [SNumber: UnicodeScalar]()
     self.insert(&dict, values: zip(self.smis, self.scalars))
     self.insert(&dict, values: zip(self.heaps, self.scalars), excluding: self.common)
 
@@ -124,7 +124,7 @@ class BigIntHashTests: XCTestCase {
 
   func test_dict_insertAndRemove() {
     // Insert all of the numbers to dict
-    var dict = [BigInt: UnicodeScalar]()
+    var dict = [SNumber: UnicodeScalar]()
     self.insert(&dict, values: zip(self.smis, self.scalars))
     self.insert(&dict, values: zip(self.heaps, self.scalars), excluding: self.common)
 
@@ -156,7 +156,7 @@ class BigIntHashTests: XCTestCase {
 
   func test_dict_insertReplaceAndFind() {
     // Insert all of the numbers to dict
-    var dict = [BigInt: UnicodeScalar]()
+    var dict = [SNumber: UnicodeScalar]()
     self.insert(&dict, values: zip(self.smis, self.scalars))
     self.insert(&dict, values: zip(self.heaps, self.scalars), excluding: self.common)
 
@@ -197,14 +197,14 @@ class BigIntHashTests: XCTestCase {
 
   // MARK: - Helpers
 
-  private func insert(_ set: inout Set<BigInt>, values: [Int]) {
+  private func insert(_ set: inout Set<SNumber>, values: [Int]) {
     for value in values {
       let int = self.create(value)
       set.insert(int)
     }
   }
 
-  private func insert(_ set: inout Set<BigInt>, values: [BigIntPrototype]) {
+  private func insert(_ set: inout Set<SNumber>, values: [SNumberPrototype]) {
     for value in values {
       let int = self.create(value)
       set.insert(int)
@@ -212,7 +212,7 @@ class BigIntHashTests: XCTestCase {
   }
 
   private func insert<S: Sequence>(
-    _ dict: inout [BigInt: UnicodeScalar],
+    _ dict: inout [SNumber: UnicodeScalar],
     values: S
   ) where S.Element == (Int, UnicodeScalar) {
     for (value, char) in values {
@@ -222,10 +222,10 @@ class BigIntHashTests: XCTestCase {
   }
 
   private func insert<S: Sequence>(
-    _ dict: inout [BigInt: UnicodeScalar],
+    _ dict: inout [SNumber: UnicodeScalar],
     values: S,
-    excluding: [BigInt]
-  ) where S.Element == (BigIntPrototype, UnicodeScalar) {
+    excluding: [SNumber]
+  ) where S.Element == (SNumberPrototype, UnicodeScalar) {
     for (value, char) in values {
       let int = self.create(value)
       if !excluding.contains(int) {
@@ -234,12 +234,12 @@ class BigIntHashTests: XCTestCase {
     }
   }
 
-  private func create(_ value: Int) -> BigInt {
-    return BigInt(value)
+  private func create(_ value: Int) -> SNumber {
+    return SNumber(value)
   }
 
-  private func create(_ p: BigIntPrototype) -> BigInt {
+  private func create(_ p: SNumberPrototype) -> SNumber {
     let heap = p.create()
-    return BigInt(heap)
+    return SNumber(heap)
   }
 }

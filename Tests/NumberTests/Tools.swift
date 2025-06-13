@@ -1,12 +1,14 @@
 //
 //  Tools.swift
-//  BigInt
+//  SwiftNumber
 //
 //  Created by Károly Lőrentey on 2017-7-23.
-//  Copyright © 2017 Károly Lőrentey. All rights reserved.
+//  Modified by Legend on 2025-06-13.
+//  Copyright © 2017 Károly Lőrentey.
+//  Copyright © 2025 Legend Labs, Inc.
 //
 
-import BigInt
+import SwiftNumber
 
 @inline(never)
 func noop<T>(_ value: T) {
@@ -15,7 +17,7 @@ func noop<T>(_ value: T) {
 
 // A basic low-quality random number generator.
 struct PseudoRandomNumbers: Sequence, IteratorProtocol {
-    typealias Element = BigUInt.Word
+    typealias Element = Number.Word
     var last: Element
 
     init(seed: Element) {

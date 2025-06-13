@@ -1,12 +1,14 @@
 //
 //  Integer Conversion.swift
-//  BigInt
+//  SwiftNumber
 //
 //  Created by Károly Lőrentey on 2017-08-11.
+//  Modified by Legend on 2025-06-13.
 //  Copyright © 2016-2017 Károly Lőrentey.
+//  Copyright © 2025 Legend Labs, Inc.
 //
 
-extension BigUInt {
+extension Number {
     public init?<T: BinaryInteger>(exactly source: T) {
         guard source >= (0 as T) else { return nil }
         if source.bitWidth <= 2 * Word.bitWidth {
@@ -20,7 +22,7 @@ extension BigUInt {
     }
 
     public init<T: BinaryInteger>(_ source: T) {
-        precondition(source >= (0 as T), "BigUInt cannot represent negative values")
+        precondition(source >= (0 as T), "Number cannot represent negative values")
         self.init(exactly: source)!
     }
 
@@ -38,25 +40,25 @@ extension BigUInt {
     }
 }
 
-extension BigInt {
+extension SNumber {
     public init() {
         self.init(sign: .plus, magnitude: 0)
     }
 
     /// Initializes a new signed big integer with the same value as the specified unsigned big integer.
-    public init(_ integer: BigUInt) {
+    public init(_ integer: Number) {
         self.magnitude = integer
         self.sign = .plus
     }
 
     public init<T>(_ source: T) where T : BinaryInteger {
         if source >= (0 as T) {
-            self.init(sign: .plus, magnitude: BigUInt(source))
+            self.init(sign: .plus, magnitude: Number(source))
         }
         else {
             var words = Array(source.words)
             words.twosComplement()
-            self.init(sign: .minus, magnitude: BigUInt(words: words))
+            self.init(sign: .minus, magnitude: Number(words: words))
         }
     }
 
@@ -73,14 +75,14 @@ extension BigInt {
     }
 }
 
-extension BigUInt: ExpressibleByIntegerLiteral {
+extension Number: ExpressibleByIntegerLiteral {
     /// Initialize a new big integer from an integer literal.
     public init(integerLiteral value: UInt64) {
         self.init(value)
     }
 }
 
-extension BigInt: ExpressibleByIntegerLiteral {
+extension SNumber: ExpressibleByIntegerLiteral {
     /// Initialize a new big integer from an integer literal.
     public init(integerLiteral value: Int64) {
         self.init(value)

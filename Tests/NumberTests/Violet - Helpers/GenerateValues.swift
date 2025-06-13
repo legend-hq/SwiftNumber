@@ -1,7 +1,7 @@
 // This file was written by LiarPrincess for Violet - Python VM written in Swift.
 // https://github.com/LiarPrincess/Violet
 
-@testable import BigInt
+@testable import SwiftNumber
 
 // MARK: - Int
 
@@ -40,12 +40,12 @@ private func generateValues<T: FixedWidthInteger>(
   return result
 }
 
-// MARK: - BigInt
+// MARK: - SNumber
 
-internal struct BigIntPrototype {
+internal struct SNumberPrototype {
 
   internal let isNegative: Bool
-  internal let words: [BigInt.Word]
+  internal let words: [SNumber.Word]
 
   internal var isPositive: Bool {
     return !self.isNegative
@@ -59,40 +59,40 @@ internal struct BigIntPrototype {
     return self.words.count == 1 && self.words[0] == 1
   }
 
-  internal func create() -> BigInt {
-    let sign: BigInt.Sign = self.isNegative ? .minus : .plus
-    let magnitude = BigUInt(words: self.words)
-    return BigInt(sign: sign, magnitude: magnitude)
+  internal func create() -> SNumber {
+    let sign: SNumber.Sign = self.isNegative ? .minus : .plus
+    let magnitude = Number(words: self.words)
+    return SNumber(sign: sign, magnitude: magnitude)
   }
 }
 
 /// Will return `2 * countButNotReally + 5` values (don't ask).
 ///
-/// We do not return `BigInt` directly because in some cases
+/// We do not return `SNumber` directly because in some cases
 /// (for example equality tests) you may want to create more than 1 value
 /// INDEPENDENTLY.
-internal func generateBigIntValues(countButNotReally: Int,
-                                   maxWordCount: Int = 3) -> [BigIntPrototype] {
-  var result = [BigIntPrototype]()
-  result.append(BigIntPrototype(isNegative: false, words: [])) //  0
-  result.append(BigIntPrototype(isNegative: false, words: [1])) //  1
-  result.append(BigIntPrototype(isNegative: true, words: [1])) // -1
-  result.append(BigIntPrototype(isNegative: false, words: [.max])) //  Word.max
-  result.append(BigIntPrototype(isNegative: true, words: [.max])) // -Word.max
+internal func generateSNumberValues(countButNotReally: Int,
+                                   maxWordCount: Int = 3) -> [SNumberPrototype] {
+  var result = [SNumberPrototype]()
+  result.append(SNumberPrototype(isNegative: false, words: [])) //  0
+  result.append(SNumberPrototype(isNegative: false, words: [1])) //  1
+  result.append(SNumberPrototype(isNegative: true, words: [1])) // -1
+  result.append(SNumberPrototype(isNegative: false, words: [.max])) //  Word.max
+  result.append(SNumberPrototype(isNegative: true, words: [.max])) // -Word.max
 
-  var word = BigInt.Word(2) // Start from '2' and go up
+  var word = SNumber.Word(2) // Start from '2' and go up
   for i in 0..<countButNotReally {
     let min1WordBecauseWeAlreadyAddedZero = 1
     let wordCount = (i % maxWordCount) + min1WordBecauseWeAlreadyAddedZero
 
-    var words = [BigInt.Word]()
+    var words = [SNumber.Word]()
     for _ in 0..<wordCount {
       words.append(word)
       word += 1
     }
 
-    result.append(BigIntPrototype(isNegative: false, words: words))
-    result.append(BigIntPrototype(isNegative: true, words: words))
+    result.append(SNumberPrototype(isNegative: false, words: words))
+    result.append(SNumberPrototype(isNegative: true, words: words))
   }
 
   return result

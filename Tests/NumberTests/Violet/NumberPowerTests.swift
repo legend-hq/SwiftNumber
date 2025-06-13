@@ -2,16 +2,16 @@
 // https://github.com/LiarPrincess/Violet
 
 import XCTest
-@testable import BigInt
+@testable import SwiftNumber
 
-class BigIntPowerTests: XCTestCase {
+class SNumberPowerTests: XCTestCase {
 
   // MARK: - Trivial base
 
   /// 0 ^ n = 0 (or sometimes 1)
 //  func test_base_zero() {
-//    let zero = BigInt(0)
-//    let one = BigInt(1)
+//    let zero = SNumber(0)
+//    let one = SNumber(1)
 //
 //    for exponent in generateIntValues(countButNotReally: 100) {
 //      let result = zero.power(exponent)
@@ -24,7 +24,7 @@ class BigIntPowerTests: XCTestCase {
 
   /// 1 ^ n = 1
   func test_base_one() {
-    let one = BigInt(1)
+    let one = SNumber(1)
 
     for exponent in generateIntValues(countButNotReally: 100) {
       let result = one.power(exponent)
@@ -35,8 +35,8 @@ class BigIntPowerTests: XCTestCase {
 
   /// (-1) ^ n = (-1) or 1
   func test_base_minusOne() {
-    let plusOne = BigInt(1)
-    let minusOne = BigInt(-1)
+    let plusOne = SNumber(1)
+    let minusOne = SNumber(-1)
 
     for exponent in generateIntValues(countButNotReally: 100) {
       let result = minusOne.power(exponent)
@@ -51,10 +51,10 @@ class BigIntPowerTests: XCTestCase {
   /// n ^ 0 = 1
   func test_exponent_zero() {
     let zero = 0
-    let one = BigInt(1)
+    let one = SNumber(1)
 
     for smi in generateIntValues(countButNotReally: 100) {
-      let base = BigInt(smi)
+      let base = SNumber(smi)
       let result = base.power(zero)
 
       let expected = one
@@ -67,7 +67,7 @@ class BigIntPowerTests: XCTestCase {
     let one = 1
 
     for smi in generateIntValues(countButNotReally: 100) {
-      let base = BigInt(smi)
+      let base = SNumber(smi)
       let result = base.power(one)
 
       let expected = base
@@ -78,8 +78,8 @@ class BigIntPowerTests: XCTestCase {
   func test_exponent_two() {
     let two = 2
 
-    for p in generateBigIntValues(countButNotReally: 2) {
-      let baseHeap = BigIntPrototype(isNegative: false, words: p.words)
+    for p in generateSNumberValues(countButNotReally: 2) {
+      let baseHeap = SNumberPrototype(isNegative: false, words: p.words)
       let base = baseHeap.create()
       let result = base.power(two)
 
@@ -91,8 +91,8 @@ class BigIntPowerTests: XCTestCase {
   func test_exponent_three() {
     let three = 3
 
-    for p in generateBigIntValues(countButNotReally: 2) {
-      let baseHeap = BigIntPrototype(isNegative: false, words: p.words)
+    for p in generateSNumberValues(countButNotReally: 2) {
+      let baseHeap = SNumberPrototype(isNegative: false, words: p.words)
       let base = baseHeap.create()
       let result = base.power(three)
 
@@ -137,11 +137,11 @@ class BigIntPowerTests: XCTestCase {
       }
 
       // Some tests will actually get here, not a lot, but some
-      let base = BigInt(baseSmi)
+      let base = SNumber(baseSmi)
       let exp = Int(expSmi)
       let result = base.power(exp)
 
-      let expected = BigInt(expectedInt)
+      let expected = SNumber(expectedInt)
       XCTAssertEqual(result, expected, "\(baseSmi) ^ \(expSmi)")
     }
   }

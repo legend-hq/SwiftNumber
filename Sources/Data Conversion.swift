@@ -1,19 +1,21 @@
 //
 //  Data Conversion.swift
-//  BigInt
+//  SwiftNumber
 //
 //  Created by Károly Lőrentey on 2016-01-04.
+//  Modified by Legend on 2025-06-13.
 //  Copyright © 2016-2017 Károly Lőrentey.
+//  Copyright © 2025 Legend Labs, Inc.
 //
 
 #if canImport(Foundation)
 import Foundation
 #endif
 
-extension BigUInt {
+extension Number {
     //MARK: NSData Conversion
 
-    /// Initialize a BigInt from bytes accessed from an UnsafeRawBufferPointer
+    /// Initialize an SNumber from bytes accessed from an UnsafeRawBufferPointer
     public init(_ buffer: UnsafeRawBufferPointer) {
         // This assumes Word is binary.
         precondition(Word.bitWidth % 8 == 0)
@@ -78,7 +80,7 @@ extension BigUInt {
     /// The data is assumed to be in network (big-endian) byte order.
     public init(_ data: Data) {
         self = data.withUnsafeBytes({ buffer in
-            BigUInt(buffer)
+            Number(buffer)
         })
     }
 
@@ -95,9 +97,9 @@ extension BigUInt {
     #endif
 }
 
-extension BigInt {
+extension SNumber {
     
-    /// Initialize a BigInt from bytes accessed from an UnsafeRawBufferPointer,
+    /// Initialize an SNumber from bytes accessed from an UnsafeRawBufferPointer,
     /// where the first byte indicates sign (0 for positive, 1 for negative)
     public init(_ buffer: UnsafeRawBufferPointer) {
         // This assumes Word is binary.
@@ -107,7 +109,7 @@ extension BigInt {
         
         let length = buffer.count
         
-        // Serialized data for a BigInt should contain at least 2 bytes: one representing
+        // Serialized data for an SNumber should contain at least 2 bytes: one representing
         // the sign, and another for the non-zero magnitude. Zero is represented by an
         // empty Data struct, and negative zero is not supported.
         guard length > 1, let firstByte = buffer.first else { return }
@@ -117,18 +119,18 @@ extension BigInt {
         // to this byte in the future.
         self.sign = firstByte & 0b1 == 0 ? .plus : .minus
 
-        self.magnitude = BigUInt(UnsafeRawBufferPointer(rebasing: buffer.dropFirst(1)))
+        self.magnitude = Number(UnsafeRawBufferPointer(rebasing: buffer.dropFirst(1)))
     }
 
     /// Return a `Data` value that contains the base-256 representation of this integer, in network (big-endian) byte order and a prepended byte to indicate the sign (0 for positive, 1 for negative)
     public func serializeToBuffer() -> UnsafeRawBufferPointer {
-        // Create a data object for the magnitude portion of the BigInt
+        // Create a data object for the magnitude portion of the SNumber
         let magnitudeBuffer = self.magnitude.serializeToBuffer()
 
-        // Similar to BigUInt, a value of 0 should return an empty buffer
+        // Similar to Number, a value of 0 should return an empty buffer
         guard magnitudeBuffer.count > 0 else { return magnitudeBuffer }
 
-        // Create a new buffer for the signed BigInt value
+        // Create a new buffer for the signed SNumber value
         let newBuffer = UnsafeMutableRawBufferPointer.allocate(byteCount: magnitudeBuffer.count + 1, alignment: 8)
         let magnitudeSection = UnsafeMutableRawBufferPointer(rebasing: newBuffer[1...])
         magnitudeSection.copyBytes(from: magnitudeBuffer)
@@ -147,7 +149,7 @@ extension BigInt {
     /// byte to represent the sign (0 for positive, 1 for negative)
     public init(_ data: Data) {
         self = data.withUnsafeBytes({ buffer in
-            BigInt(buffer)
+            SNumber(buffer)
         })
     }
     

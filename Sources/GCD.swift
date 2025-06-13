@@ -1,18 +1,20 @@
 //
 //  GCD.swift
-//  BigInt
+//  SwiftNumber
 //
 //  Created by Károly Lőrentey on 2016-01-03.
+//  Modified by Legend on 2025-06-13.
 //  Copyright © 2016-2017 Károly Lőrentey.
+//  Copyright © 2025 Legend Labs, Inc.
 //
 
-extension BigUInt {
+extension Number {
     //MARK: Greatest Common Divisor
     
     /// Returns the greatest common divisor of `self` and `b`.
     ///
     /// - Complexity: O(count^2) where count = max(self.count, b.count)
-    public func greatestCommonDivisor(with b: BigUInt) -> BigUInt {
+    public func greatestCommonDivisor(with b: Number) -> Number {
         // This is Stein's algorithm: https://en.wikipedia.org/wiki/Binary_GCD_algorithm
         if self.isZero { return b }
         if b.isZero { return self }
@@ -40,15 +42,15 @@ extension BigUInt {
     /// - Returns: If `gcd(self, modulus) == 1`, the value returned is an integer `a < modulus` such that `(a * self) % modulus == 1`. If `self` and `modulus` aren't coprime, the return value is `nil`.
     /// - Requires: modulus > 1
     /// - Complexity: O(count^3)
-    public func inverse(_ modulus: BigUInt) -> BigUInt? {
+    public func inverse(_ modulus: Number) -> Number? {
         precondition(modulus > 1)
-        var t1 = BigInt(0)
-        var t2 = BigInt(1)
+        var t1 = SNumber(0)
+        var t2 = SNumber(1)
         var r1 = modulus
         var r2 = self
         while !r2.isZero {
             let quotient = r1 / r2
-            (t1, t2) = (t2, t1 - BigInt(quotient) * t2)
+            (t1, t2) = (t2, t1 - SNumber(quotient) * t2)
             (r1, r2) = (r2, r1 - quotient * r2)
         }
         if r1 > 1 { return nil }
@@ -57,12 +59,12 @@ extension BigUInt {
     }
 }
 
-extension BigInt {
+extension SNumber {
     /// Returns the greatest common divisor of `a` and `b`.
     ///
     /// - Complexity: O(count^2) where count = max(a.count, b.count)
-    public func greatestCommonDivisor(with b: BigInt) -> BigInt {
-        return BigInt(self.magnitude.greatestCommonDivisor(with: b.magnitude))
+    public func greatestCommonDivisor(with b: SNumber) -> SNumber {
+        return SNumber(self.magnitude.greatestCommonDivisor(with: b.magnitude))
     }
 
     /// Returns the [multiplicative inverse of this integer in modulo `modulus` arithmetic][inverse],
@@ -73,8 +75,8 @@ extension BigInt {
     /// - Returns: If `gcd(self, modulus) == 1`, the value returned is an integer `a < modulus` such that `(a * self) % modulus == 1`. If `self` and `modulus` aren't coprime, the return value is `nil`.
     /// - Requires: modulus.magnitude > 1
     /// - Complexity: O(count^3)
-    public func inverse(_ modulus: BigInt) -> BigInt? {
+    public func inverse(_ modulus: SNumber) -> SNumber? {
         guard let inv = self.magnitude.inverse(modulus.magnitude) else { return nil }
-        return BigInt(self.sign == .plus || inv.isZero ? inv : modulus.magnitude - inv)
+        return SNumber(self.sign == .plus || inv.isZero ? inv : modulus.magnitude - inv)
     }
 }

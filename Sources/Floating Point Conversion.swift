@@ -1,16 +1,18 @@
 //
 //  Floating Point Conversion.swift
-//  BigInt
+//  SwiftNumber
 //
 //  Created by Károly Lőrentey on 2017-08-11.
+//  Modified by Legend on 2025-06-13.
 //  Copyright © 2016-2017 Károly Lőrentey.
+//  Copyright © 2025 Legend Labs, Inc.
 //
 
 #if canImport(Foundation)
 import Foundation
 #endif
 
-extension BigUInt {
+extension Number {
     public init?<T: BinaryFloatingPoint>(exactly source: T) {
         guard source.isFinite else { return nil }
         guard !source.isZero else { self = 0; return }
@@ -20,7 +22,7 @@ extension BigUInt {
         assert(value.floatingPointClass == .positiveNormal)
         assert(value.exponent >= 0)
         let significand = value.significandBitPattern
-        self = (BigUInt(1) << value.exponent) + BigUInt(significand) >> (T.significandBitCount - Int(value.exponent))
+        self = (Number(1) << value.exponent) + Number(significand) >> (T.significandBitCount - Int(value.exponent))
     }
 
     public init<T: BinaryFloatingPoint>(_ source: T) {
@@ -52,28 +54,28 @@ extension BigUInt {
         #if os(Linux) || os(Windows)
         // `Decimal._mantissa` has an internal access level on linux, and it might get
         // deprecated in the future, so keeping the string implementation around for now.
-        let significand = BigUInt("\(integer.significand)")!
+        let significand = Number("\(integer.significand)")!
         #else
         let significand = {
-            var start = BigUInt(0)
+            var start = Number(0)
             for (place, value) in integer.significand.mantissaParts.enumerated() {
                 guard value > 0 else { continue }
-                start += (1 << (place * 16)) * BigUInt(value)
+                start += (1 << (place * 16)) * Number(value)
             }
             return start
         }()
         #endif
-        let exponent = BigUInt(10).power(integer.exponent)
+        let exponent = Number(10).power(integer.exponent)
 
         self = significand * exponent
     }
     #endif
 }
 
-extension BigInt {
+extension SNumber {
     public init?<T: BinaryFloatingPoint>(exactly source: T) {
-        guard let magnitude = BigUInt(exactly: source.magnitude) else { return nil }
-        let sign = BigInt.Sign(source.sign)
+        guard let magnitude = Number(exactly: source.magnitude) else { return nil }
+        let sign = SNumber.Sign(source.sign)
         self.init(sign: sign, magnitude: magnitude)
     }
 
@@ -83,21 +85,21 @@ extension BigInt {
 
     #if canImport(Foundation)
     public init?(exactly source: Decimal) {
-        guard let magnitude = BigUInt(exactly: source.magnitude) else { return nil }
-        let sign = BigInt.Sign(source.sign)
+        guard let magnitude = Number(exactly: source.magnitude) else { return nil }
+        let sign = SNumber.Sign(source.sign)
         self.init(sign: sign, magnitude: magnitude)
     }
 
     public init?(truncating source: Decimal) {
-        guard let magnitude = BigUInt(truncating: source.magnitude) else { return nil }
-        let sign = BigInt.Sign(source.sign)
+        guard let magnitude = Number(truncating: source.magnitude) else { return nil }
+        let sign = SNumber.Sign(source.sign)
         self.init(sign: sign, magnitude: magnitude)
     }
     #endif
 }
 
 extension BinaryFloatingPoint where RawExponent: FixedWidthInteger, RawSignificand: FixedWidthInteger {
-    public init(_ value: BigInt) {
+    public init(_ value: SNumber) {
         guard !value.isZero else { self = 0; return }
         let v = value.magnitude
         let bitWidth = v.bitWidth
@@ -122,12 +124,12 @@ extension BinaryFloatingPoint where RawExponent: FixedWidthInteger, RawSignifica
                          significandBitPattern: RawSignificand(significand))
     }
 
-    public init(_ value: BigUInt) {
-        self.init(BigInt(sign: .plus, magnitude: value))
+    public init(_ value: Number) {
+        self.init(SNumber(sign: .plus, magnitude: value))
     }
 }
 
-extension BigInt.Sign {
+extension SNumber.Sign {
     public init(_ sign: FloatingPointSign) {
         switch sign {
         case .plus:
@@ -140,9 +142,9 @@ extension BigInt.Sign {
 
 #if canImport(Foundation)
 public extension Decimal {
-    init(_ value: BigUInt) {
+    init(_ value: Number) {
         guard
-            value < BigUInt(exactly: Decimal.greatestFiniteMagnitude)!
+            value < Number(exactly: Decimal.greatestFiniteMagnitude)!
         else {
             self = .greatestFiniteMagnitude
             return
@@ -152,9 +154,9 @@ public extension Decimal {
         self.init(string: "\(value)")!
     }
 
-    init(_ value: BigInt) {
+    init(_ value: SNumber) {
         if value >= 0 {
-            self.init(BigUInt(value))
+            self.init(Number(value))
         } else {
             self.init(value.magnitude)
             self *= -1

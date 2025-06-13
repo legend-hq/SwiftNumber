@@ -1,13 +1,14 @@
 //
 //  WordTests.swift
-//  BigInt
+//  SwiftNumber
 //
 //  Created by Károly Lőrentey on 2017-7-26.
-//  Copyright © 2017 Károly Lőrentey. All rights reserved.
-//
+//  Modified by Legend on 2025-06-13.
+//  Copyright © 2017 Károly Lőrentey.
+//  Copyright © 2025 Legend Labs, Inc.
 
 import XCTest
-@testable import BigInt
+@testable import SwiftNumber
 
 // TODO: Return to `where Word.Magnitude == Word` when SR-13491 is resolved
 struct TestDivision<Word: FixedWidthInteger> {

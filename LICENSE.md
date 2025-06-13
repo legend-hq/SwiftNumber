@@ -1,4 +1,4 @@
-
+Copyright (c) 2025 Legend Labs, Inc.
 Copyright (c) 2016-2017 Károly Lőrentey
 
 Permission is hereby granted, free of charge, to any person obtaining a copy

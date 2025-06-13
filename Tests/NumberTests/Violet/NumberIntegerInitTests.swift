@@ -2,14 +2,14 @@
 // https://github.com/LiarPrincess/Violet
 
 import XCTest
-@testable import BigInt
+@testable import SwiftNumber
 
-private typealias Word = BigInt.Word
+private typealias Word = SNumber.Word
 
-/// This class tests `BigInt -> Swift.Integer` inits!
-/// Our `BigInt.inits` are quite trivial (because we can represent any number),
+/// This class tests `SNumber -> Swift.Integer` inits!
+/// Our `SNumber.inits` are quite trivial (because we can represent any number),
 /// so we will not test them.
-class BigIntIntegerInitTests: XCTestCase {
+class SNumberIntegerInitTests: XCTestCase {
 
   // MARK: - Exactly
 
@@ -48,19 +48,19 @@ class BigIntIntegerInitTests: XCTestCase {
     for value in values {
       let header = "\(typeName) \(value)"
 
-      let bigInt = BigInt(value)
+      let SNumber = SNumber(value)
 
       // String representation should be equal - trivial test for value
-      let bigIntString = String(bigInt, radix: 10, uppercase: false)
+      let SNumberString = String(SNumber, radix: 10, uppercase: false)
       let valueString = String(value, radix: 10, uppercase: false)
-      XCTAssertEqual(bigIntString, valueString, "\(header) - String", file: file, line: line)
+      XCTAssertEqual(SNumberString, valueString, "\(header) - String", file: file, line: line)
 
-      // T -> BigInt -> T
-      if let revert = T(exactly: bigInt) {
-        let msg = "\(header) - \(typeName) -> BigInt -> \(typeName)"
+      // T -> SNumber -> T
+      if let revert = T(exactly: SNumber) {
+        let msg = "\(header) - \(typeName) -> SNumber -> \(typeName)"
         XCTAssertEqual(value, revert, msg, file: file, line: line)
       } else {
-        XCTFail("\(header) - failed BigInt -> \(typeName)", file: file, line: line)
+        XCTFail("\(header) - failed SNumber -> \(typeName)", file: file, line: line)
       }
     }
   }
@@ -88,11 +88,11 @@ class BigIntIntegerInitTests: XCTestCase {
   ) {
     let max = type.max
 
-    var maxPlus1 = BigInt(max)
+    var maxPlus1 = SNumber(max)
     maxPlus1 += 1
     XCTAssertNil(T(exactly: maxPlus1), "\(max) + 1", file: file, line: line)
 
-    let moreWordsHeap = BigIntPrototype(isNegative: false, words: [0, 1])
+    let moreWordsHeap = SNumberPrototype(isNegative: false, words: [0, 1])
     let moreWords = moreWordsHeap.create()
     XCTAssertNil(T(exactly: moreWords), "\(moreWordsHeap)", file: file, line: line)
   }
@@ -120,11 +120,11 @@ class BigIntIntegerInitTests: XCTestCase {
   ) {
     let min = type.min
 
-    var minMinus1 = BigInt(min)
+    var minMinus1 = SNumber(min)
     minMinus1 -= 1
     XCTAssertNil(T(exactly: minMinus1), "\(min) - 1", file: file, line: line)
 
-    let moreWordsHeap = BigIntPrototype(isNegative: true, words: [0, 1])
+    let moreWordsHeap = SNumberPrototype(isNegative: true, words: [0, 1])
     let moreWords = moreWordsHeap.create()
     XCTAssertNil(T(exactly: moreWords), "\(moreWordsHeap)", file: file, line: line)
   }
@@ -167,16 +167,16 @@ class BigIntIntegerInitTests: XCTestCase {
     for value in values {
       let header = "\(typeName) \(value)"
 
-      let bigInt = BigInt(value)
+      let SNumber = SNumber(value)
 
       // String representation should be equal - trivial test for value
-      let bigIntString = String(bigInt, radix: 10, uppercase: false)
+      let SNumberString = String(SNumber, radix: 10, uppercase: false)
       let valueString = String(value, radix: 10, uppercase: false)
-      XCTAssertEqual(bigIntString, valueString, "\(header) - String", file: file, line: line)
+      XCTAssertEqual(SNumberString, valueString, "\(header) - String", file: file, line: line)
 
-      // T -> BigInt -> T
-      let revert = T(clamping: bigInt)
-      let msg = "\(header) - \(typeName) -> BigInt -> \(typeName)"
+      // T -> SNumber -> T
+      let revert = T(clamping: SNumber)
+      let msg = "\(header) - \(typeName) -> SNumber -> \(typeName)"
       XCTAssertEqual(value, revert, msg, file: file, line: line)
     }
   }
@@ -203,22 +203,22 @@ class BigIntIntegerInitTests: XCTestCase {
     line: UInt = #line
   ) {
     let maxT = type.max
-    let max = BigInt(maxT)
+    let max = SNumber(maxT)
 
     do {
       let maxPlus1 = max + 1
       let clamped = T(clamping: maxPlus1)
-      let clampedBigInt = BigInt(clamped)
-      XCTAssertEqual(clampedBigInt, max, "\(max) + 1", file: file, line: line)
+      let clampedSNumber = SNumber(clamped)
+      XCTAssertEqual(clampedSNumber, max, "\(max) + 1", file: file, line: line)
     }
 
     do {
-      let moreWordsHeap = BigIntPrototype(isNegative: false, words: [0, 1])
+      let moreWordsHeap = SNumberPrototype(isNegative: false, words: [0, 1])
       let moreWords = moreWordsHeap.create()
 
       let clamped = T(clamping: moreWords)
-      let clampedBigInt = BigInt(clamped)
-      XCTAssertEqual(clampedBigInt, max, "\(moreWordsHeap)", file: file, line: line)
+      let clampedSNumber = SNumber(clamped)
+      XCTAssertEqual(clampedSNumber, max, "\(moreWordsHeap)", file: file, line: line)
     }
   }
 
@@ -244,22 +244,22 @@ class BigIntIntegerInitTests: XCTestCase {
     line: UInt = #line
   ) {
     let minT = type.min
-    let min = BigInt(minT)
+    let min = SNumber(minT)
 
     do {
       let minMinus1 = min - 1
       let clamped = T(clamping: minMinus1)
-      let clampedBigInt = BigInt(clamped)
-      XCTAssertEqual(clampedBigInt, min, "\(min) - 1", file: file, line: line)
+      let clampedSNumber = SNumber(clamped)
+      XCTAssertEqual(clampedSNumber, min, "\(min) - 1", file: file, line: line)
     }
 
     do {
-      let moreWordsHeap = BigIntPrototype(isNegative: true, words: [0, 1])
+      let moreWordsHeap = SNumberPrototype(isNegative: true, words: [0, 1])
       let moreWords = moreWordsHeap.create()
 
       let clamped = T(clamping: moreWords)
-      let clampedBigInt = BigInt(clamped)
-      XCTAssertEqual(clampedBigInt, min, "\(moreWordsHeap)", file: file, line: line)
+      let clampedSNumber = SNumber(clamped)
+      XCTAssertEqual(clampedSNumber, min, "\(moreWordsHeap)", file: file, line: line)
     }
   }
 
@@ -301,16 +301,16 @@ class BigIntIntegerInitTests: XCTestCase {
     for value in values {
       let header = "\(typeName) \(value)"
 
-      let bigInt = BigInt(value)
+      let SNumber = SNumber(value)
 
       // String representation should be equal - trivial test for value
-      let bigIntString = String(bigInt, radix: 10, uppercase: false)
+      let SNumberString = String(SNumber, radix: 10, uppercase: false)
       let valueString = String(value, radix: 10, uppercase: false)
-      XCTAssertEqual(bigIntString, valueString, "\(header) - String", file: file, line: line)
+      XCTAssertEqual(SNumberString, valueString, "\(header) - String", file: file, line: line)
 
-      // T -> BigInt -> T
-      let revert = T(truncatingIfNeeded: bigInt)
-      let msg = "\(header) - \(typeName) -> BigInt -> \(typeName)"
+      // T -> SNumber -> T
+      let revert = T(truncatingIfNeeded: SNumber)
+      let msg = "\(header) - \(typeName) -> SNumber -> \(typeName)"
       XCTAssertEqual(value, revert, msg, file: file, line: line)
     }
   }
@@ -337,32 +337,32 @@ class BigIntIntegerInitTests: XCTestCase {
     line: UInt = #line
   ) {
     let maxT = type.max
-    let max = BigInt(maxT)
+    let max = SNumber(maxT)
     let minT = type.min
-    let min = BigInt(minT)
-    let zero = BigInt()
+    let min = SNumber(minT)
+    let zero = SNumber()
 
     do {
       // signed:   0111 + 1 =   1000 -> min
       // unsigned: 1111 + 1 = 1 0000 -> 0
       let maxPlus1 = max + 1
       let truncated = T(truncatingIfNeeded: maxPlus1)
-      let truncatedBigInt = BigInt(truncated)
+      let truncatedSNumber = SNumber(truncated)
 
       let expected = T.isSigned ? min : zero
-      XCTAssertEqual(truncatedBigInt, expected, "\(max) + 1", file: file, line: line)
+      XCTAssertEqual(truncatedSNumber, expected, "\(max) + 1", file: file, line: line)
     }
 
     do {
       let lowWord = Word(12)
-      let moreWordsHeap = BigIntPrototype(isNegative: false, words: [lowWord, 1])
+      let moreWordsHeap = SNumberPrototype(isNegative: false, words: [lowWord, 1])
       let moreWords = moreWordsHeap.create()
 
       let truncated = T(truncatingIfNeeded: moreWords)
-      let truncatedBigInt = BigInt(truncated)
+      let truncatedSNumber = SNumber(truncated)
 
-      let expected = BigInt(lowWord)
-      XCTAssertEqual(truncatedBigInt, expected, "\(moreWordsHeap)", file: file, line: line)
+      let expected = SNumber(lowWord)
+      XCTAssertEqual(truncatedSNumber, expected, "\(moreWordsHeap)", file: file, line: line)
     }
   }
 
@@ -388,19 +388,19 @@ class BigIntIntegerInitTests: XCTestCase {
     line: UInt = #line
   ) {
     let maxT = type.max
-    let max = BigInt(maxT)
+    let max = SNumber(maxT)
     let minT = type.min
-    let min = BigInt(minT)
+    let min = SNumber(minT)
 
     do {
       // signed:   1000 - 1 = 0111 = max
       // unsigned: 0000 - 1 = 1111 = max
       let minMinus1 = min - 1
       let truncated = T(truncatingIfNeeded: minMinus1)
-      let truncatedBigInt = BigInt(truncated)
+      let truncatedSNumber = SNumber(truncated)
 
       let expected = max
-      XCTAssertEqual(truncatedBigInt, expected, "\(min) - 1", file: file, line: line)
+      XCTAssertEqual(truncatedSNumber, expected, "\(min) - 1", file: file, line: line)
     }
 
     do {
@@ -408,15 +408,15 @@ class BigIntIntegerInitTests: XCTestCase {
       // unsigned: -12 = (1111) 0100 = ?
       // 11110100
       let lowWord = Word(12)
-      let moreWordsHeap = BigIntPrototype(isNegative: true, words: [lowWord, 1])
+      let moreWordsHeap = SNumberPrototype(isNegative: true, words: [lowWord, 1])
       let moreWords = moreWordsHeap.create()
 
       let truncated = T(truncatingIfNeeded: moreWords)
-      let truncatedBigInt = BigInt(truncated)
+      let truncatedSNumber = SNumber(truncated)
 
       let complement = ~lowWord + 1 // no overflow possible
-      let expected = BigInt(T(truncatingIfNeeded: complement))
-      XCTAssertEqual(truncatedBigInt, expected, "\(moreWordsHeap)", file: file, line: line)
+      let expected = SNumber(T(truncatingIfNeeded: complement))
+      XCTAssertEqual(truncatedSNumber, expected, "\(moreWordsHeap)", file: file, line: line)
     }
   }
 }

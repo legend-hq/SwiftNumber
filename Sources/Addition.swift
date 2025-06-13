@@ -1,12 +1,14 @@
 //
 //  Addition.swift
-//  BigInt
+//  SwiftNumber
 //
 //  Created by Károly Lőrentey on 2016-01-03.
+//  Modified by Legend on 2025-06-13.
 //  Copyright © 2016-2017 Károly Lőrentey.
+//  Copyright © 2025 Legend Labs, Inc.
 //
 
-extension BigUInt {
+extension Number {
     //MARK: Addition
     
     /// Add `word` to this integer in place.
@@ -29,7 +31,7 @@ extension BigUInt {
     /// `d` is shifted `shift` words to the left before being added.
     ///
     /// - Complexity: O(max(count, shift))
-    internal func addingWord(_ word: Word, shiftedBy shift: Int = 0) -> BigUInt {
+    internal func addingWord(_ word: Word, shiftedBy shift: Int = 0) -> Number {
         var r = self
         r.addWord(word, shiftedBy: shift)
         return r
@@ -39,7 +41,7 @@ extension BigUInt {
     /// `b` is shifted `shift` words to the left before being added.
     ///
     /// - Complexity: O(max(count, b.count + shift))
-    internal mutating func add(_ b: BigUInt, shiftedBy shift: Int = 0) {
+    internal mutating func add(_ b: Number, shiftedBy shift: Int = 0) {
         precondition(shift >= 0)
         var carry = false
         var bi = 0
@@ -64,7 +66,7 @@ extension BigUInt {
     /// `b` is shifted `shift` words to the left before being added.
     ///
     /// - Complexity: O(max(count, b.count + shift))
-    internal func adding(_ b: BigUInt, shiftedBy shift: Int = 0) -> BigUInt {
+    internal func adding(_ b: Number, shiftedBy shift: Int = 0) -> Number {
         var r = self
         r.add(b, shiftedBy: shift)
         return r
@@ -81,46 +83,45 @@ extension BigUInt {
     /// Add `a` and `b` together and return the result.
     ///
     /// - Complexity: O(max(a.count, b.count))
-    public static func +(a: BigUInt, b: BigUInt) -> BigUInt {
+    public static func +(a: Number, b: Number) -> Number {
         return a.adding(b)
     }
 
     /// Add `a` and `b` together, and store the sum in `a`.
     ///
     /// - Complexity: O(max(a.count, b.count))
-    public static func +=(a: inout BigUInt, b: BigUInt) {
+    public static func +=(a: inout Number, b: Number) {
         a.add(b, shiftedBy: 0)
     }
 }
 
-extension BigInt {
+extension SNumber {
     /// Add `a` to `b` and return the result.
-    public static func +(a: BigInt, b: BigInt) -> BigInt {
+    public static func +(a: SNumber, b: SNumber) -> SNumber {
         switch (a.sign, b.sign) {
         case (.plus, .plus):
-            return BigInt(sign: .plus, magnitude: a.magnitude + b.magnitude)
+            return SNumber(sign: .plus, magnitude: a.magnitude + b.magnitude)
         case (.minus, .minus):
-            return BigInt(sign: .minus, magnitude: a.magnitude + b.magnitude)
+            return SNumber(sign: .minus, magnitude: a.magnitude + b.magnitude)
         case (.plus, .minus):
             if a.magnitude >= b.magnitude {
-                return BigInt(sign: .plus, magnitude: a.magnitude - b.magnitude)
+                return SNumber(sign: .plus, magnitude: a.magnitude - b.magnitude)
             }
             else {
-                return BigInt(sign: .minus, magnitude: b.magnitude - a.magnitude)
+                return SNumber(sign: .minus, magnitude: b.magnitude - a.magnitude)
             }
         case (.minus, .plus):
             if b.magnitude >= a.magnitude {
-                return BigInt(sign: .plus, magnitude: b.magnitude - a.magnitude)
+                return SNumber(sign: .plus, magnitude: b.magnitude - a.magnitude)
             }
             else {
-                return BigInt(sign: .minus, magnitude: a.magnitude - b.magnitude)
+                return SNumber(sign: .minus, magnitude: a.magnitude - b.magnitude)
             }
         }
     }
 
     /// Add `b` to `a` in place.
-    public static func +=(a: inout BigInt, b: BigInt) {
+    public static func +=(a: inout SNumber, b: SNumber) {
         a = a + b
     }
 }
-

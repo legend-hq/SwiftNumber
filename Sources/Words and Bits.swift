@@ -1,9 +1,11 @@
 //
 //  Words and Bits.swift
-//  BigInt
+//  SwiftNumber
 //
 //  Created by Károly Lőrentey on 2017-08-11.
+//  Modified by Legend on 2025-06-13.
 //  Copyright © 2016-2017 Károly Lőrentey.
+//  Copyright © 2025 Legend Labs, Inc.
 //
 
 extension Array where Element == UInt {
@@ -20,7 +22,7 @@ extension Array where Element == UInt {
     }
 }
 
-extension BigUInt {
+extension Number {
     public subscript(bitAt index: Int) -> Bool {
         get {
             precondition(index >= 0)
@@ -40,7 +42,7 @@ extension BigUInt {
     }
 }
 
-extension BigUInt {
+extension Number {
     /// The minimum number of bits required to represent this integer in binary.
     ///
     /// - Returns: floor(log2(2 * self + 1))
@@ -51,7 +53,7 @@ extension BigUInt {
     }
 
     /// The number of leading zero bits in the binary representation of this integer in base `2^(Word.bitWidth)`.
-    /// This is useful when you need to normalize a `BigUInt` such that the top bit of its most significant word is 1.
+    /// This is useful when you need to normalize a `Number` such that the top bit of its most significant word is 1.
     ///
     /// - Note: 0 is considered to have zero leading zero bits.
     /// - Returns: A value in `0...(Word.bitWidth - 1)`.
@@ -74,7 +76,7 @@ extension BigUInt {
     }
 }
 
-extension BigInt {
+extension SNumber {
     public var bitWidth: Int {
         guard !magnitude.isZero else { return 0 }
         return magnitude.bitWidth + 1
@@ -86,11 +88,11 @@ extension BigInt {
     }
 }
 
-extension BigUInt {
+extension Number {
     public struct Words: RandomAccessCollection {
-        private let value: BigUInt
+        private let value: Number
 
-        fileprivate init(_ value: BigUInt) { self.value = value }
+        fileprivate init(_ value: Number) { self.value = value }
 
         public var startIndex: Int { return 0 }
         public var endIndex: Int { return value.count }
@@ -135,14 +137,14 @@ extension BigUInt {
     }
 }
 
-extension BigInt {
+extension SNumber {
     public struct Words: RandomAccessCollection {
         public typealias Indices = CountableRange<Int>
 
-        private let value: BigInt
+        private let value: SNumber
         private let decrementLimit: Int
 
-        fileprivate init(_ value: BigInt) {
+        fileprivate init(_ value: SNumber) {
             self.value = value
             switch value.sign {
             case .plus:
@@ -192,11 +194,11 @@ extension BigInt {
     public init<S: Sequence>(words: S) where S.Element == Word {
         var words = Array(words)
         if (words.last ?? 0) >> (Word.bitWidth - 1) == 0 {
-            self.init(sign: .plus, magnitude: BigUInt(words: words))
+            self.init(sign: .plus, magnitude: Number(words: words))
         }
         else {
             words.twosComplement()
-            self.init(sign: .minus, magnitude: BigUInt(words: words))
+            self.init(sign: .minus, magnitude: Number(words: words))
         }
     }
 }

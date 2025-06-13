@@ -1,3 +1,9 @@
+# 6.0.0 (2025-10-13)
+
+This release contains the following changes:
+
+- Rename to `SwiftNumber`
+
 # 5.3.0 (2021-09-06)
 
 This release contains the following changes:
@@ -22,7 +28,7 @@ This release contains the following changes:
 
 This release contains the following changes:
 
-- Added support to serialize/deserialize BigInt in a manner similar to BigUInt
+- Added support to serialize/deserialize BigInt in a manner similar to Number
 
 # 5.0.0 (2019-08-24)
 
@@ -70,8 +76,8 @@ There were no functional changes.
 
 This release contains the following bug fixes:
 
-- Issue #27 — changing scope of `BigUInt` methods `kind` and `storage` to be `fileprivate`
-- Making `subscript` method of `BigUInt` public
+- Issue #27 — changing scope of `Number` methods `kind` and `storage` to be `fileprivate`
+- Making `subscript` method of `Number` public
 
 # 3.0.0 (2017-09-07)
 
@@ -80,10 +86,10 @@ This is a major release upgrading BigInt to the new integer protocols introduced
 [se-0104]: https://github.com/apple/swift-evolution/blob/master/proposals/0104-improved-integers.md
 
 - Adopting the new protocols involved major, breaking changes throughout the API. These aren't individually listed here.
-- The `BigUInt` struct now provides inline storage for big integers that fit inside two words. This optimization speeds up conversions from built-in fixed-width integer types, amongst other frequent operations.
-- `BigInt` and `BigUInt` implements the new `Codable` protocol. In both cases, values are encoded in an unkeyed container starting with a string indicating the sign (`"+"` or `"-"`), followed by a sequence of 64-bit unsigned integers representing component words, from least to most significant.
+- The `Number` struct now provides inline storage for big integers that fit inside two words. This optimization speeds up conversions from built-in fixed-width integer types, amongst other frequent operations.
+- `BigInt` and `Number` implements the new `Codable` protocol. In both cases, values are encoded in an unkeyed container starting with a string indicating the sign (`"+"` or `"-"`), followed by a sequence of 64-bit unsigned integers representing component words, from least to most significant.
 - New method: `BigInt.modulo`, contributed by @FabioTacke.
-- `BigUInt` does not implement `Collection` in this release. The collection of words is available in the standard read-only `words` property. Direct public access to collection methods have been removed; if you have been manipulating big integers using collection methods, you need to rewrite your code. If you have a usecase that isn't covered by the public API, please submit a PR adding the missing functionality. (Public read-write access to the underlying storage inside `BigUInt` will not be restored, though.)
+- `Number` does not implement `Collection` in this release. The collection of words is available in the standard read-only `words` property. Direct public access to collection methods have been removed; if you have been manipulating big integers using collection methods, you need to rewrite your code. If you have a usecase that isn't covered by the public API, please submit a PR adding the missing functionality. (Public read-write access to the underlying storage inside `Number` will not be restored, though.)
 
 BigInt is now part of the Attaswift project. The bundle identifiers in the supplied Xcode project have been updated accordingly.
 
@@ -93,7 +99,7 @@ Note that the URL for the package's Git repository has changed; please update yo
 
 This release contains the following changes:
 
-- `BigUInt.randomIntegerLessThan(_:)` was renamed to `BigUInt.randomInteger(lessThan:)` to match Swift 3 naming conventions. (The old name is still available for compatibility.)
+- `Number.randomIntegerLessThan(_:)` was renamed to `Number.randomInteger(lessThan:)` to match Swift 3 naming conventions. (The old name is still available for compatibility.)
 - The `ShiftOperations` protocol was merged into `BigDigit` and removed. It was previously public by accident. (Issue #9)
 - `BigInt.modulus(_:,_:)` is a new static method that returns the nonnegative modulus value of its two arguments. (PR #19 by @FabioTacke)
 
@@ -140,9 +146,9 @@ This release updates the project for Swift 3.0, including adapting the API to th
 
 Further changes:
 
-- The behavior of `BigUInt.gcd` when one of the arguments is zero has been fixed; the result in this case is now equal to the other argument.
+- The behavior of `Number.gcd` when one of the arguments is zero has been fixed; the result in this case is now equal to the other argument.
 - `BigInt` now conforms to `Strideable`, `IntegerArithmetic`, `SignedNumber` and `AbsoluteValuable`.
-- `BigUInt` now conforms to `Strideable`, `IntegerArithmetic` and `BitwiseOperations`.
+- `Number` now conforms to `Strideable`, `IntegerArithmetic` and `BitwiseOperations`.
 
 # 1.3.0 (2016-03-23)
 
@@ -193,7 +199,7 @@ BigInt 1.2.0 also features support for both Carthage and CocoaPods deployments.
 This is the first release of the BigInt module, providing arbitrary precision integer arithmetic operations
 in pure Swift.
 
-Two big integer types are included: `BigUInt` and `BigInt`, the latter being the signed variant.
+Two big integer types are included: `Number` and `BigInt`, the latter being the signed variant.
 Both of these are Swift structs with copy-on-write value semantics, and they can be used much
 like any other integer type.
 
@@ -207,10 +213,10 @@ operand on the fly.
 - Unsigned subtraction will trap when the result would be negative. (There are variants
 that return an overflow flag.)
 - Multiplication uses brute force for numbers up to 1024 digits, then switches to Karatsuba's recursive method.
-(This limit is configurable, see `BigUInt.directMultiplicationLimit`.)
+(This limit is configurable, see `Number.directMultiplicationLimit`.)
 A fused multiply-add method is also available.
 - Division uses Knuth's Algorithm D, with its 3/2 digits wide quotient approximation.
-It will trap when the divisor is zero. `BigUInt.divmod` returns the quotient and
+It will trap when the divisor is zero. `Number.divmod` returns the quotient and
 remainder at once; this is faster than calculating them separately.
 - Bitwise operators: `~`, `|`, `&`, `^`, `|=`, `&=`, `^=`, plus the following read-only properties:
 - `width`: the minimum number of bits required to store the integer,
@@ -218,12 +224,12 @@ remainder at once; this is faster than calculating them separately.
 - `leadingZeroBitCount`: the number of leading zero bits (when the last digit isn't full),
 - Shift operators: `>>`, `<<`, `>>=`, `<<=`
 - Left shifts need to allocate memory to extend the digit array, so it's probably not a good idea
-to left shift a `BigUInt` by 2^50 bits.
+to left shift a `Number` by 2^50 bits.
 - Radix conversion between `String`s and big integers up to base 36 (using repeated divisions).
 - Big integers use this to implement `StringLiteralConvertible` (in base 10).
 - `sqrt(n)`: The square root of an integer (using Newton's method)
-- `BigUInt.gcd(n, m)`: The greatest common divisor of two integers (Stein's algorithm)
-- `BigUInt.powmod(base, exponent, modulus)`: Modular exponentiation (right-to-left binary method):
+- `Number.gcd(n, m)`: The greatest common divisor of two integers (Stein's algorithm)
+- `Number.powmod(base, exponent, modulus)`: Modular exponentiation (right-to-left binary method):
 
 The implementations are intended to be reasonably efficient, but they are unlikely to be
 competitive with GMP at all, even when I happened to implement an algorithm with same asymptotic

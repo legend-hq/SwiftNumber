@@ -1,7 +1,7 @@
 // This file was written by LiarPrincess for Violet - Python VM written in Swift.
 // https://github.com/LiarPrincess/Violet
 
-@testable import BigInt
+@testable import SwiftNumber
 
 // swiftlint:disable number_separator
 // swiftlint:disable line_length
@@ -9,7 +9,7 @@
 
 internal enum StringTestCases {
 
-  internal typealias TestCase = (words: [BigInt.Word], string: String)
+  internal typealias TestCase = (words: [SNumber.Word], string: String)
 
   // MARK: - Binary
 

@@ -1,25 +1,27 @@
 //
 //  Bitwise Ops.swift
-//  BigInt
+//  SwiftNumber
 //
 //  Created by Károly Lőrentey on 2016-01-03.
+//  Modified by Legend on 2025-06-13.
 //  Copyright © 2016-2017 Károly Lőrentey.
+//  Copyright © 2025 Legend Labs, Inc.
 //
 
 //MARK: Bitwise Operations
 
-extension BigUInt {
+extension Number {
     /// Return the ones' complement of `a`.
     ///
     /// - Complexity: O(a.count)
-    public static prefix func ~(a: BigUInt) -> BigUInt {
-        return BigUInt(words: a.words.map { ~$0 })
+    public static prefix func ~(a: Number) -> Number {
+        return Number(words: a.words.map { ~$0 })
     }
 
     /// Calculate the bitwise OR of `a` and `b`, and store the result in `a`.
     ///
     /// - Complexity: O(max(a.count, b.count))
-    public static func |= (a: inout BigUInt, b: BigUInt) {
+    public static func |= (a: inout Number, b: Number) {
         a.reserveCapacity(b.count)
         for i in 0 ..< b.count {
             a[i] |= b[i]
@@ -29,7 +31,7 @@ extension BigUInt {
     /// Calculate the bitwise AND of `a` and `b` and return the result.
     ///
     /// - Complexity: O(max(a.count, b.count))
-    public static func &= (a: inout BigUInt, b: BigUInt) {
+    public static func &= (a: inout Number, b: Number) {
         for i in 0 ..< Swift.max(a.count, b.count) {
             a[i] &= b[i]
         }
@@ -38,7 +40,7 @@ extension BigUInt {
     /// Calculate the bitwise XOR of `a` and `b` and return the result.
     ///
     /// - Complexity: O(max(a.count, b.count))
-    public static func ^= (a: inout BigUInt, b: BigUInt) {
+    public static func ^= (a: inout Number, b: Number) {
         a.reserveCapacity(b.count)
         for i in 0 ..< b.count {
             a[i] ^= b[i]
@@ -46,17 +48,17 @@ extension BigUInt {
     }
 }
 
-extension BigInt {
-    public static prefix func ~(x: BigInt) -> BigInt {
+extension SNumber {
+    public static prefix func ~(x: SNumber) -> SNumber {
         switch x.sign {
         case .plus:
-            return BigInt(sign: .minus, magnitude: x.magnitude + 1)
+            return SNumber(sign: .minus, magnitude: x.magnitude + 1)
         case .minus:
-            return BigInt(sign: .plus, magnitude: x.magnitude - 1)
+            return SNumber(sign: .plus, magnitude: x.magnitude - 1)
         }
     }
     
-    public static func &(lhs: inout BigInt, rhs: BigInt) -> BigInt {
+    public static func &(lhs: inout SNumber, rhs: SNumber) -> SNumber {
         let left = lhs.words
         let right = rhs.words
         // Note we aren't using left.count/right.count here; we account for the sign bit separately later.
@@ -68,12 +70,12 @@ extension BigInt {
         }
         if lhs.sign == .minus && rhs.sign == .minus {
             words.twosComplement()
-            return BigInt(sign: .minus, magnitude: BigUInt(words: words))
+            return SNumber(sign: .minus, magnitude: Number(words: words))
         }
-        return BigInt(sign: .plus, magnitude: BigUInt(words: words))
+        return SNumber(sign: .plus, magnitude: Number(words: words))
     }
     
-    public static func |(lhs: inout BigInt, rhs: BigInt) -> BigInt {
+    public static func |(lhs: inout SNumber, rhs: SNumber) -> SNumber {
         let left = lhs.words
         let right = rhs.words
         // Note we aren't using left.count/right.count here; we account for the sign bit separately later.
@@ -85,12 +87,12 @@ extension BigInt {
         }
         if lhs.sign == .minus || rhs.sign == .minus {
             words.twosComplement()
-            return BigInt(sign: .minus, magnitude: BigUInt(words: words))
+            return SNumber(sign: .minus, magnitude: Number(words: words))
         }
-        return BigInt(sign: .plus, magnitude: BigUInt(words: words))
+        return SNumber(sign: .plus, magnitude: Number(words: words))
     }
     
-    public static func ^(lhs: inout BigInt, rhs: BigInt) -> BigInt {
+    public static func ^(lhs: inout SNumber, rhs: SNumber) -> SNumber {
         let left = lhs.words
         let right = rhs.words
         // Note we aren't using left.count/right.count here; we account for the sign bit separately later.
@@ -102,20 +104,20 @@ extension BigInt {
         }
         if (lhs.sign == .minus) != (rhs.sign == .minus) {
             words.twosComplement()
-            return BigInt(sign: .minus, magnitude: BigUInt(words: words))
+            return SNumber(sign: .minus, magnitude: Number(words: words))
         }
-        return BigInt(sign: .plus, magnitude: BigUInt(words: words))
+        return SNumber(sign: .plus, magnitude: Number(words: words))
     }
     
-    public static func &=(lhs: inout BigInt, rhs: BigInt) {
+    public static func &=(lhs: inout SNumber, rhs: SNumber) {
         lhs = lhs & rhs
     }
     
-    public static func |=(lhs: inout BigInt, rhs: BigInt) {
+    public static func |=(lhs: inout SNumber, rhs: SNumber) {
         lhs = lhs | rhs
     }
     
-    public static func ^=(lhs: inout BigInt, rhs: BigInt) {
+    public static func ^=(lhs: inout SNumber, rhs: SNumber) {
         lhs = lhs ^ rhs
     }
 }

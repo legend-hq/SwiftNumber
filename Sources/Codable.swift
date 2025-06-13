@@ -1,8 +1,10 @@
 //
 //  Codable.swift
-//  BigInt
+//  SwiftNumber
 //
 //  Created by Károly Lőrentey on 2017-8-11.
+//  Modified by Legend on 2025-06-13.
+//  Copyright © 2025 Legend Labs, Inc.
 //  Copyright © 2016-2017 Károly Lőrentey.
 //
 
@@ -100,56 +102,38 @@ extension Array where Element: FixedWidthInteger {
     }
 }
 
-extension BigInt: Codable {
+extension SNumber: Codable {
     public init(from decoder: Decoder) throws {
-        var container = try decoder.unkeyedContainer()
-
-        // Decode sign
-        let sign: BigInt.Sign
-        switch try container.decode(String.self) {
-        case "+":
-            sign = .plus
-        case "-":
-            sign = .minus
-        default:
-            throw DecodingError.dataCorrupted(.init(codingPath: container.codingPath,
-                                                    debugDescription: "Invalid big integer sign"))
+        if let str = try? decoder.singleValueContainer().decode(String.self) {
+            if let value = SNumber(str, radix: 10) {
+                self = value
+            } else {
+                throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath,
+                                                    debugDescription: "Invalid number"))
+            }
+        } else {
+            let value = try decoder.singleValueContainer().decode(Int64.self)
+            self = SNumber(value)
         }
-
-        // Decode magnitude
-        let words = try [UInt](count: container.count?.advanced(by: -1)) { () -> UInt64? in
-            guard !container.isAtEnd else { return nil }
-            return try container.decode(UInt64.self)
-        }
-        let magnitude = BigUInt(words: words)
-
-        self.init(sign: sign, magnitude: magnitude)
     }
 
     public func encode(to encoder: Encoder) throws {
-        var container = encoder.unkeyedContainer()
-        try container.encode(sign == .plus ? "+" : "-")
-        let units = Units(of: UInt64.self, self.magnitude.words)
-        if units.isEmpty {
-            try container.encode(0 as UInt64)
-        }
-        else {
-            try container.encode(contentsOf: units)
-        }
+        var container = encoder.singleValueContainer()
+        try container.encode(self.description)
     }
 }
 
-extension BigUInt: Codable {
+extension Number: Codable {
     public init(from decoder: Decoder) throws {
-        let value = try BigInt(from: decoder)
+        let value = try SNumber(from: decoder)
         guard value.sign == .plus else {
             throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath,
-                                                    debugDescription: "BigUInt cannot hold a negative value"))
+                                                    debugDescription: "Number cannot hold a negative value"))
         }
         self = value.magnitude
     }
 
     public func encode(to encoder: Encoder) throws {
-        try BigInt(sign: .plus, magnitude: self).encode(to: encoder)
+        try SNumber(sign: .plus, magnitude: self).encode(to: encoder)
     }
 }

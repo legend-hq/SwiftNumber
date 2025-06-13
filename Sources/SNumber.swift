@@ -1,12 +1,14 @@
 //
-//  BigInt.swift
-//  BigInt
+//  SNumber.swift
+//  SwiftNumber
 //
 //  Created by Károly Lőrentey on 2015-12-27.
+//  Modified by Legend on 2025-06-13.
 //  Copyright © 2016-2017 Károly Lőrentey.
+//  Copyright © 2025 Legend Labs, Inc.
 //
 
-//MARK: BigInt
+//MARK: SNumber
 
 /// An arbitary precision signed integer type, also known as a "big integer".
 ///
@@ -15,40 +17,40 @@
 ///
 /// This particular big integer type uses base-2^64 digits to represent integers.
 ///
-/// `BigInt` is essentially a tiny wrapper that extends `BigUInt` with a sign bit and provides signed integer
+/// `SNumber` is essentially a tiny wrapper that extends `Number` with a sign bit and provides signed integer
 /// operations. Both the underlying absolute value and the negative/positive flag are available as read-write 
 /// properties.
 ///
-/// Not all algorithms of `BigUInt` are available for `BigInt` values; for example, there is no square root or
+/// Not all algorithms of `Number` are available for `SNumber` values; for example, there is no square root or
 /// primality test for signed integers. When you need to call one of these, just extract the absolute value:
 ///
 /// ```Swift
-/// BigInt(255).magnitude.isPrime()   // Returns false
+/// SNumber(255).magnitude.isPrime()   // Returns false
 /// ```
 ///
-public struct BigInt: SignedInteger, Sendable {
+public struct SNumber: SignedInteger, Sendable {
     public enum Sign: Sendable {
         case plus
         case minus
     }
 
-    public typealias Magnitude = BigUInt
+    public typealias Magnitude = Number
 
-    /// The type representing a digit in `BigInt`'s underlying number system.
-    public typealias Word = BigUInt.Word
+    /// The type representing a digit in `SNumber`'s underlying number system.
+    public typealias Word = Number.Word
     
     public static var isSigned: Bool {
         return true
     }
 
     /// The absolute value of this integer.
-    public var magnitude: BigUInt
+    public var magnitude: Number
 
     /// True iff the value of this integer is negative.
     public var sign: Sign
 
     /// Initializes a new big integer with the provided absolute number and sign flag.
-    public init(sign: Sign, magnitude: BigUInt) {
+    public init(sign: Sign, magnitude: Number) {
         self.sign = (magnitude.isZero ? .plus : sign)
         self.magnitude = magnitude
     }
@@ -63,7 +65,7 @@ public struct BigInt: SignedInteger, Sendable {
     /// Returns `-1` if this value is negative and `1` if it’s positive; otherwise, `0`.
     ///
     /// - Returns: The sign of this number, expressed as an integer of the same type.
-    public func signum() -> BigInt {
+    public func signum() -> SNumber {
         switch sign {
         case .plus:
             return isZero ? 0 : 1

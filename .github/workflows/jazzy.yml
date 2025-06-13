@@ -16,9 +16,9 @@ jobs:
       run: |
         jazzy \
         --clean \
-        --github-file-prefix "https://github.com/attaswift/$module/tree/${GITHUB_REF}" \
+        --github-file-prefix "https://github.com/legend-hq/$module/tree/${GITHUB_REF}" \
         --module-version "${{ github.event.release.tag_name }}" \
-        --copyright "© $(date '+%Y') [Károly Lőrentey](https://twitter.com/lorentey). (Last updated: $(date '+%Y-%m-%d'))" \
+        --copyright "© $(date '+%Y') [Károly Lőrentey](https://twitter.com/lorentey), [Legend Labs, Inc](https://x.com/joinlegend). (Last updated: $(date '+%Y-%m-%d'))" \
         --config .jazzy.yml
     - name: Commit docs
       run: |

@@ -1,21 +1,23 @@
 //
 //  Prime Test.swift
-//  BigInt
+//  SwiftNumber
 //
 //  Created by Károly Lőrentey on 2016-01-04.
+//  Modified by Legend on 2025-06-13.
 //  Copyright © 2016-2017 Károly Lőrentey.
+//  Copyright © 2025 Legend Labs, Inc.
 //
 
 /// The first several [prime numbers][primes]. 
 ///
 /// [primes]: https://oeis.org/A000040
-let primes: [BigUInt.Word] = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41]
+let primes: [Number.Word] = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41]
 
 /// The ith element in this sequence is the smallest composite number that passes the strong probable prime test
 /// for all of the first (i+1) primes.
 ///
 /// This is sequence [A014233](http://oeis.org/A014233) on the [Online Encyclopaedia of Integer Sequences](http://oeis.org).
-let pseudoPrimes: [BigUInt] = [
+let pseudoPrimes: [Number] = [
     /*  2 */ 2_047,
     /*  3 */ 1_373_653,
     /*  5 */ 25_326_001,
@@ -31,15 +33,15 @@ let pseudoPrimes: [BigUInt] = [
     /* 41 */ "3317044064679887385961981",
 ]
 
-extension BigUInt {
+extension Number {
     //MARK: Primality Testing
 
     /// Returns true iff this integer passes the [strong probable prime test][sppt] for the specified base.
     ///
     /// [sppt]: https://en.wikipedia.org/wiki/Probable_prime
-    public func isStrongProbablePrime(_ base: BigUInt) -> Bool {
-        precondition(base > (1 as BigUInt))
-        precondition(self > (0 as BigUInt))
+    public func isStrongProbablePrime(_ base: Number) -> Bool {
+        precondition(base > (1 as Number))
+        precondition(self > (0 as Number))
         let dec = self - 1
 
         let r = dec.trailingZeroBitCount
@@ -97,7 +99,7 @@ extension BigUInt {
         /// Give an exact answer when we can.
         if self < pseudoPrimes.last! {
             for i in 0 ..< pseudoPrimes.count {
-                guard isStrongProbablePrime(BigUInt(primes[i])) else {
+                guard isStrongProbablePrime(Number(primes[i])) else {
                     break
                 }
                 if self < pseudoPrimes[i] {
@@ -110,7 +112,7 @@ extension BigUInt {
 
         /// Otherwise do as many rounds of random SPPT as required.
         for _ in 0 ..< rounds {
-            let random = BigUInt.randomInteger(lessThan: self - 2) + 2
+            let random = Number.randomInteger(lessThan: self - 2) + 2
             guard isStrongProbablePrime(random) else {
                 return false
             }
@@ -121,13 +123,13 @@ extension BigUInt {
     }
 }
 
-extension BigInt {
+extension SNumber {
     //MARK: Primality Testing
 
     /// Returns true iff this integer passes the [strong probable prime test][sppt] for the specified base.
     ///
     /// [sppt]: https://en.wikipedia.org/wiki/Probable_prime
-    public func isStrongProbablePrime(_ base: BigInt) -> Bool {
+    public func isStrongProbablePrime(_ base: SNumber) -> Bool {
         precondition(base.sign == .plus)
         if self.sign == .minus { return false }
         return self.magnitude.isStrongProbablePrime(base.magnitude)

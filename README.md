@@ -1,21 +1,21 @@
-[![BigInt](https://github.com/attaswift/BigInt/raw/master/images/banner.png)](https://github.com/attaswift/BigInt)
+[![SwiftNumber](https://github.com/legend-hq/SwiftNumber/raw/master/images/banner.png)](https://github.com/legend-hq/SwiftNumber)
 
 * [Overview](#overview)
 * [API Documentation](#api)
 * [License](#license)
 * [Requirements and Integration](#integration)
 * [Implementation Notes](#notes)
-    * [Why is there no generic `BigInt<Digit>` type?](#generics)
+    * [Why is there no generic `SNumber<Digit>` type?](#generics)
 * [Calculation Samples](#samples)
 	* [Obligatory factorial demo](#factorial)
 	* [RSA Cryptography](#rsa)
 	* [Calculating the Digits of π](#pi)
 
-[![Swift](https://github.com/attaswift/BigInt/actions/workflows/swift.yml/badge.svg?branch=master)](https://github.com/attaswift/BigInt/actions/workflows/swift.yml)
-[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fattaswift%2FBigInt%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/attaswift/BigInt)
-[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fattaswift%2FBigInt%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/attaswift/BigInt)
+[![Swift](https://github.com/legend-hq/SwiftNumber/actions/workflows/swift.yml/badge.svg?branch=master)](https://github.com/legend-hq/SwiftNumber/actions/workflows/swift.yml)
+[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fattaswift%2FSNumber%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/legend-hq/SwiftNumber)
+[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fattaswift%2FSNumber%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/legend-hq/SwiftNumber)
 
-<!-- [![Code Coverage](https://codecov.io/github/attaswift/BigInt/coverage.svg?branch=master)](https://codecov.io/github/attaswift/BigInt?branch=master) -->
+<!-- [![Code Coverage](https://codecov.io/github/legend-hq/SwiftNumber/coverage.svg?branch=master)](https://codecov.io/github/legend-hq/SwiftNumber?branch=master) -->
 
 ## <a name="overview">Overview</a>
 
@@ -30,7 +30,7 @@ as a dependency.
 
 [GMP]: https://gmplib.org
 
-Two big integer types are included: [`BigUInt`][BigUInt] and [`BigInt`][BigInt],
+Two big integer types are included: [`Number`][Number] and [`SNumber`][SNumber],
 the latter being the signed variant.
 Both of these are Swift structs with copy-on-write value semantics, and they can be used much
 like any other integer type.
@@ -46,11 +46,11 @@ big integers, including
   - Unsigned subtraction will trap when the result would be negative.
     ([There are variants][subtraction] that return an overflow flag.)
   - [Multiplication][mul] uses brute force for numbers up to 1024 digits, then switches to Karatsuba's recursive method.
-    (This limit is configurable, see `BigUInt.directMultiplicationLimit`.)
+    (This limit is configurable, see `Number.directMultiplicationLimit`.)
   - A [fused multiply-add][fused] method is also available, along with other [special-case variants][multiplication].
   - [Division][division] uses Knuth's Algorithm D, with its 3/2 digits wide quotient approximation.
     It will trap when the divisor is zero.
-  - [`BigUInt.divide`][divide] returns the quotient and
+  - [`Number.divide`][divide] returns the quotient and
     remainder at once; this is faster than calculating them separately.
 
 - [Bitwise operators][bitwise]: `~`, `|`, `&`, `^`, `|=`, `&=`, `^=`, plus the following read-only properties:
@@ -69,7 +69,7 @@ big integers, including
 
 - [`sqrt(n)`][sqrt]: The square root of an integer (using Newton's method).
 
-- [`BigUInt.gcd(n, m)`][GCD]: The greatest common divisor of two integers (Stein's algorithm).
+- [`Number.gcd(n, m)`][GCD]: The greatest common divisor of two integers (Stein's algorithm).
 
 - [`base.power(exponent, modulus)`][powmod]: Modular exponentiation (right-to-left binary method).
   [Vanilla exponentiation][power] is also available.
@@ -85,18 +85,18 @@ in it.
 
 ## <a name="api">API Documentation</a>
 
-Generated API docs are available at https://attaswift.github.io/BigInt/.
+Generated API docs are available at https://legend-hq.github.io/SNumber/.
 
 ## <a name="license">License</a>
 
-BigInt can be used, distributed and modified under [the MIT license][license].
+SNumber can be used, distributed and modified under [the MIT license][license].
 
 ## <a name="integration">Requirements and Integration</a>
 
-BigInt 4.0.0 requires Swift 4.2 (The last version with support for Swift 3.x was BigInt 2.1.0.
-The last version with support for Swift 2 was BigInt 1.3.0.)
+SNumber 4.0.0 requires Swift 4.2 (The last version with support for Swift 3.x was SNumber 2.1.0.
+The last version with support for Swift 2 was SNumber 1.3.0.)
 
-| Swift Version | last BigInt Version|
+| Swift Version | last SNumber Version|
 | ------------- |:-------------------|
 | 3.x           | 2.1.0              |
 | 4.0           | 3.1.0              |
@@ -104,36 +104,36 @@ The last version with support for Swift 2 was BigInt 1.3.0.)
 | 5.x           | 5.4.0              |
 
 
-BigInt deploys to macOS 10.10, iOS 9, watchOS 2 and tvOS 9.
+SNumber deploys to macOS 10.10, iOS 9, watchOS 2 and tvOS 9.
 It has been tested on the latest OS releases only---however, as the module uses very few platform-provided APIs,
 there should be very few issues with earlier versions.
 
-BigInt uses no APIs specific to Apple platforms, so
+SNumber uses no APIs specific to Apple platforms, so
 it should be easy to port it to other operating systems.
 
 Setup instructions:
 
 - **Swift Package Manager:**
-  Although the Package Manager is still in its infancy, BigInt provides experimental support for it.
+  Although the Package Manager is still in its infancy, SNumber provides experimental support for it.
   Add this to the dependency section of your `Package.swift` manifest:
 
     ```Swift
-    .package(url: "https://github.com/attaswift/BigInt.git", from: "5.4.0")
+    .package(url: "https://github.com/legend-hq/SwiftNumber.git", from: "5.4.0")
     ```
 
 ## <a name="notes">Implementation notes</a>
 
-[`BigUInt`][BigUInt] is a `MutableCollectionType` of its 64-bit digits, with the least significant
-digit at index 0. As a convenience, [`BigUInt`][BigUInt] allows you to subscript it with indexes at
+[`Number`][Number] is a `MutableCollectionType` of its 64-bit digits, with the least significant
+digit at index 0. As a convenience, [`Number`][Number] allows you to subscript it with indexes at
 or above its `count`. [The subscript operator][subscript] returns 0 for out-of-bound `get`s and
 automatically extends the array on out-of-bound `set`s. This makes memory management simpler.
 
-[`BigInt`][BigInt] is just a tiny wrapper around a `BigUInt` [absolute value][magnitude] and a
+[`SNumber`][SNumber] is just a tiny wrapper around a `Number` [absolute value][magnitude] and a
 [sign bit][negative], both of which are accessible as public read-write properties.
 
-### <a name="generics">Why is there no generic `BigInt<Digit>` type?</a>
+### <a name="generics">Why is there no generic `SNumber<Digit>` type?</a>
 
-The types provided by `BigInt` are not parametric—this is very much intentional, as
+The types provided by `SNumber` are not parametric—this is very much intentional, as
 Swift generics cost us dearly at runtime in this use case. In every approach I tried,
 making arbitrary-precision arithmetic operations work with a generic `Digit` type parameter
 resulted in code that was literally *ten times slower*. If you can make the algorithms generic
@@ -143,56 +143,56 @@ This is an area that I plan to investigate more, as it would be useful to have g
 implementations for arbitrary-width arithmetic operations. (Polynomial division and decimal bases
 are two examples.) The library already implements double-digit multiplication and division as
 extension methods on a protocol with an associated type requirement; this has not measurably affected
-performance. Unfortunately, the same is not true for `BigUInt`'s methods.
+performance. Unfortunately, the same is not true for `Number`'s methods.
 
 Of course, as a last resort, we could just duplicate the code to create a separate
 generic variant that was slower but more flexible.
 
-[license]: https://github.com/attaswift/BigInt/blob/master/LICENSE.md
+[license]: https://github.com/legend-hq/SwiftNumber/blob/master/LICENSE.md
 [twitter]: https://twitter.com/lorentey
-[BigUInt]: http://attaswift.github.io/BigInt/Structs/BigUInt.html
-[BigInt]: http://attaswift.github.io/BigInt/Structs/BigInt.html
-[comparison]: http://attaswift.github.io/BigInt/Structs/BigUInt.html#/Comparison
-[hashing]: http://attaswift.github.io/BigInt/Structs/BigUInt.html#/Hashing
-[addition]: http://attaswift.github.io/BigInt/Structs/BigUInt.html#/Addition
-[subtraction]: http://attaswift.github.io/BigInt/Structs/BigUInt.html#/Subtraction
-[mul]: http://attaswift.github.io/BigInt/Structs/BigUInt.html#/s:ZFV6BigInt7BigUIntoi1mFTS0_S0__S0_
-[fused]: http://attaswift.github.io/BigInt/Structs/BigUInt.html#/s:FV6BigInt7BigUInt14multiplyAndAddFTS0_Vs6UInt6410atPositionSi_T_
-[multiplication]: http://attaswift.github.io/BigInt/Structs/BigUInt.html#/Multiplication
-[division]: http://attaswift.github.io/BigInt/Structs/BigUInt.html#/Division
-[divide]: http://attaswift.github.io/BigInt/Structs/BigUInt.html#/s:FV6BigInt7BigUInt7dividedFT2byS0__T8quotientS0_9remainderS0__
-[bitwise]: http://attaswift.github.io/BigInt/Structs/BigUInt.html#/Bitwise%20Operations
-[width]: http://attaswift.github.io/BigInt/Structs/BigUInt.html#/s:vV6BigInt7BigUInt5widthSi
-[leadingZeroBitCount]: http://attaswift.github.io/BigInt/Structs/BigUInt.html#/s:vV6BigInt7BigUInt13leadingZeroBitCountSi
-[trailingZeroBitCount]: http://attaswift.github.io/BigInt/Structs/BigUInt.html#/s:vV6BigInt7BigUInt14trailingZeroBitCountSi
-[shift]: http://attaswift.github.io/BigInt/Structs/BigUInt.html#/Shift%20Operators
-[data]: http://attaswift.github.io/BigInt/Structs/BigUInt.html#/NSData%20Conversion
-[random]: http://attaswift.github.io/BigInt/Structs/BigUInt.html#/Random%20Integers
-[radix1]: http://attaswift.github.io/BigInt/Extensions/String.html#/s:FE6BigIntSScFTVS_7BigUInt5radixSi9uppercaseSb_SS
-[radix2]: http://attaswift.github.io/BigInt/Structs/BigUInt.html#/s:FV6BigInt7BigUIntcFTSS5radixSi_GSqS0__
-[sqrt]: http://attaswift.github.io/BigInt/Functions.html#/s:F6BigInt4sqrtFVS_7BigUIntS0_
-[GCD]: http://attaswift.github.io/BigInt/Structs/BigUInt.html#/s:ZFV6BigInt7BigUInt3gcdFTS0_S0__S0_
-[powmod]: http://attaswift.github.io/BigInt/Structs/BigUInt.html#/s:FV6BigInt7BigUInt5powerFTS0_7modulusS0__S0_
-[power]: http://attaswift.github.io/BigInt/Structs/BigUInt.html#/s:FV6BigInt7BigUInt5powerFSiS0_
-[inverse]: http://attaswift.github.io/BigInt/Structs/BigUInt.html#/s:FV6BigInt7BigUInt7inverseFS0_GSqS0__
-[prime]: http://attaswift.github.io/BigInt/Structs/BigUInt.html#/Primality%20Testing
-[abs]: http://attaswift.github.io/BigInt/Structs/BigInt.html#/s:vV6BigInt6BigInt3absVS_7BigUInt
-[negative]: http://attaswift.github.io/BigInt/Structs/BigInt.html#/s:vV6BigInt6BigInt8negativeSb
-[subscript]: https://github.com/attaswift/BigInt/blob/v2.0.0/Sources/BigUInt.swift#L216-L239
-[fullmuldiv]: https://github.com/attaswift/BigInt/blob/v2.0.0/Sources/BigDigit.swift#L96-L167
+[Number]: http://legend-hq.github.io/SNumber/Structs/Number.html
+[SNumber]: http://legend-hq.github.io/SNumber/Structs/SNumber.html
+[comparison]: http://legend-hq.github.io/SNumber/Structs/Number.html#/Comparison
+[hashing]: http://legend-hq.github.io/SNumber/Structs/Number.html#/Hashing
+[addition]: http://legend-hq.github.io/SNumber/Structs/Number.html#/Addition
+[subtraction]: http://legend-hq.github.io/SNumber/Structs/Number.html#/Subtraction
+[mul]: http://legend-hq.github.io/SNumber/Structs/Number.html#/s:ZFV6SNumber7Numberoi1mFTS0_S0__S0_
+[fused]: http://legend-hq.github.io/SNumber/Structs/Number.html#/s:FV6SNumber7Number14multiplyAndAddFTS0_Vs6UInt6410atPositionSi_T_
+[multiplication]: http://legend-hq.github.io/SNumber/Structs/Number.html#/Multiplication
+[division]: http://legend-hq.github.io/SNumber/Structs/Number.html#/Division
+[divide]: http://legend-hq.github.io/SNumber/Structs/Number.html#/s:FV6SNumber7Number7dividedFT2byS0__T8quotientS0_9remainderS0__
+[bitwise]: http://legend-hq.github.io/SNumber/Structs/Number.html#/Bitwise%20Operations
+[width]: http://legend-hq.github.io/SNumber/Structs/Number.html#/s:vV6SNumber7Number5widthSi
+[leadingZeroBitCount]: http://legend-hq.github.io/SNumber/Structs/Number.html#/s:vV6SNumber7Number13leadingZeroBitCountSi
+[trailingZeroBitCount]: http://legend-hq.github.io/SNumber/Structs/Number.html#/s:vV6SNumber7Number14trailingZeroBitCountSi
+[shift]: http://legend-hq.github.io/SNumber/Structs/Number.html#/Shift%20Operators
+[data]: http://legend-hq.github.io/SNumber/Structs/Number.html#/NSData%20Conversion
+[random]: http://legend-hq.github.io/SNumber/Structs/Number.html#/Random%20Integers
+[radix1]: http://legend-hq.github.io/SNumber/Extensions/String.html#/s:FE6SNumberSScFTVS_7Number5radixSi9uppercaseSb_SS
+[radix2]: http://legend-hq.github.io/SNumber/Structs/Number.html#/s:FV6SNumber7NumbercFTSS5radixSi_GSqS0__
+[sqrt]: http://legend-hq.github.io/SNumber/Functions.html#/s:F6SNumber4sqrtFVS_7NumberS0_
+[GCD]: http://legend-hq.github.io/SNumber/Structs/Number.html#/s:ZFV6SNumber7Number3gcdFTS0_S0__S0_
+[powmod]: http://legend-hq.github.io/SNumber/Structs/Number.html#/s:FV6SNumber7Number5powerFTS0_7modulusS0__S0_
+[power]: http://legend-hq.github.io/SNumber/Structs/Number.html#/s:FV6SNumber7Number5powerFSiS0_
+[inverse]: http://legend-hq.github.io/SNumber/Structs/Number.html#/s:FV6SNumber7Number7inverseFS0_GSqS0__
+[prime]: http://legend-hq.github.io/SNumber/Structs/Number.html#/Primality%20Testing
+[abs]: http://legend-hq.github.io/SNumber/Structs/SNumber.html#/s:vV6SNumber6SNumber3absVS_7Number
+[negative]: http://legend-hq.github.io/SNumber/Structs/SNumber.html#/s:vV6SNumber6SNumber8negativeSb
+[subscript]: https://github.com/legend-hq/SwiftNumber/blob/v2.0.0/Sources/Number.swift#L216-L239
+[fullmuldiv]: https://github.com/legend-hq/SwiftNumber/blob/v2.0.0/Sources/BigDigit.swift#L96-L167
 
 
 ## <a name="samples">Calculation Samples</a>
 
 ### <a name="factorial">Obligatory Factorial Demo</a>
 
-It is easy to use `BigInt` to calculate the factorial function for any integer:
+It is easy to use `SNumber` to calculate the factorial function for any integer:
 
 ```Swift
-import BigInt
+import SNumber
 
-func factorial(_ n: Int) -> BigInt {
-    return (1 ... n).map { BigInt($0) }.reduce(BigInt(1), *)
+func factorial(_ n: Int) -> SNumber {
+    return (1 ... n).map { SNumber($0) }.reduce(SNumber(1), *)
 }
 
 print(factorial(10))
@@ -242,7 +242,7 @@ Well, I guess that's all right, but it's not very interesting. Let's try somethi
 
 ### <a name="rsa">RSA Cryptography</a>
 
-The `BigInt` module provides all necessary parts to implement an (overly)
+The `SNumber` module provides all necessary parts to implement an (overly)
 simple [RSA cryptography system][RSA].
 
 [RSA]: https://en.wikipedia.org/wiki/RSA_(cryptosystem)
@@ -252,10 +252,10 @@ includes a function to generate random integers of a specific size, and also an
 `isPrime` method that performs the Miller–Rabin primality test. These are all we need:
 
 ```Swift
-func generatePrime(_ width: Int) -> BigUInt {
+func generatePrime(_ width: Int) -> Number {
     while true {
-        var random = BigUInt.randomInteger(withExactWidth: width)
-        random |= BigUInt(1)
+        var random = Number.randomInteger(withExactWidth: width)
+        random |= Number(1)
         if random.isPrime() {
             return random
         }
@@ -279,7 +279,7 @@ Cool! Now that we have two large primes, we can produce an RSA public/private ke
 out of them.
 
 ```Swift
-typealias Key = (modulus: BigUInt, exponent: BigUInt)
+typealias Key = (modulus: Number, exponent: Number)
 
 let n = p * q
 ==> 22721008120758282530010953362926306641542233757318103044313144976976529789946696
@@ -291,7 +291,7 @@ let n = p * q
     02207275447810167397968435583004676293892340103729490987263776871467057582629588
     916498579594964478080508868267360515953225283461208420137
 
-let e: BigUInt = 65537
+let e: Number = 65537
 let phi = (p - 1) * (q - 1)
 let d = e.inverse(phi)!     // d * e % phi == 1
 ==> 13964664343869014759736350480776837992604500903989703383202366291905558996277719
@@ -310,18 +310,18 @@ let privateKey: Key = (n, d)
 In RSA, modular exponentiation is used to encrypt (and decrypt) messages.
 
 ```Swift
-func encrypt(_ message: BigUInt, key: Key) -> BigUInt {
+func encrypt(_ message: Number, key: Key) -> Number {
     return message.power(key.exponent, modulus: key.modulus)
 }
 ```
 
 Let's try out our new keypair by converting a string into UTF-8, interpreting
 the resulting binary representation as a big integer, and encrypting it with the
-public key. `BigUInt` has an initializer that takes an `NSData`, so this is pretty
+public key. `Number` has an initializer that takes an `NSData`, so this is pretty
 easy to do:
 
 ```Swift
-let secret: BigUInt = BigUInt("Arbitrary precision arithmetic is fun!".dataUsingEncoding(NSUTF8StringEncoding)!)
+let secret: Number = Number("Arbitrary precision arithmetic is fun!".dataUsingEncoding(NSUTF8StringEncoding)!)
 ==> 83323446846105976078466731524728681905293067701804838925389198929123912971229457
     68818568737
 
@@ -355,7 +355,7 @@ that we ignored to keep this example short.
 
 ### <a name="pi">Calculating the Digits of π</a>
 
-Another fun activity to try with `BigInt`s is to generate the digits of π.
+Another fun activity to try with `SNumber`s is to generate the digits of π.
 Let's try implementing [Jeremy Gibbon's spigot algorithm][spigot].
 This is a rather slow algorithm as π-generators go, but it makes up for it with its grooviness
 factor: it's remarkably short, it only uses (big) integer arithmetic, and every iteration
@@ -366,9 +366,9 @@ implementation as an infinite `GeneratorType`:
 
 ```Swift
 func digitsOfPi() -> AnyGenerator<Int> {
-    var q: BigUInt = 1
-    var r: BigUInt = 180
-    var t: BigUInt = 60
+    var q: Number = 1
+    var r: Number = 180
+    var t: Number = 60
     var i: UInt64 = 2 // Does not overflow until digit #826_566_842
     return AnyIterator {
         let u: UInt64 = 3 * (3 * i + 1) * (3 * i + 2)

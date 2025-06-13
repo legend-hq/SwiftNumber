@@ -2,9 +2,9 @@
 // https://github.com/LiarPrincess/Violet
 
 import XCTest
-@testable import BigInt
+@testable import SwiftNumber
 
-private typealias Word = BigInt.Word
+private typealias Word = SNumber.Word
 private typealias WordsExpected = (words: [Word], expected: String)
 
 private typealias TestCase = StringTestCases.TestCase
@@ -14,7 +14,7 @@ private typealias OctalTestCases = StringTestCases.Octal
 private typealias DecimalTestCases = StringTestCases.Decimal
 private typealias HexTestCases = StringTestCases.Hex
 
-class BigIntStringInitTests: XCTestCase {
+class SNumberStringInitTests: XCTestCase {
 
   // MARK: - Empty
 
@@ -42,7 +42,7 @@ class BigIntStringInitTests: XCTestCase {
   // MARK: - Zero
 
   func test_zero_single() {
-    let zero = BigInt()
+    let zero = SNumber()
 
     for radix in [2, 4, 7, 32] {
       let result = self.create(string: "0", radix: radix)
@@ -51,7 +51,7 @@ class BigIntStringInitTests: XCTestCase {
   }
 
   func test_zero_single_plus() {
-    let zero = BigInt()
+    let zero = SNumber()
 
     for radix in [2, 4, 7, 32] {
       let result = self.create(string: "+0", radix: radix)
@@ -60,7 +60,7 @@ class BigIntStringInitTests: XCTestCase {
   }
 
   func test_zero_single_minus() {
-    let zero = BigInt()
+    let zero = SNumber()
 
     for radix in [2, 4, 7, 32] {
       let result = self.create(string: "-0", radix: radix)
@@ -69,7 +69,7 @@ class BigIntStringInitTests: XCTestCase {
   }
 
   func test_zero_multiple() {
-    let zero = BigInt()
+    let zero = SNumber()
     let input = String(repeating: "0", count: 42)
 
     for radix in [2, 4, 7, 32] {
@@ -84,7 +84,7 @@ class BigIntStringInitTests: XCTestCase {
     let radix = 10
 
     for smi in generateIntValues(countButNotReally: 100) {
-      let expected = BigInt(smi)
+      let expected = SNumber(smi)
 
       let lowercase = String(smi, radix: radix, uppercase: false)
       let lowercaseResult = self.create(string: lowercase, radix: radix)
@@ -335,9 +335,9 @@ class BigIntStringInitTests: XCTestCase {
 
   // MARK: - Helpers
 
-  /// Abstraction over `BigInt.init(_:radix:)`.
-  private func create(string: String, radix: Int) -> BigInt? {
-    return BigInt(string, radix: radix)
+  /// Abstraction over `SNumber.init(_:radix:)`.
+  private func create(string: String, radix: Int) -> SNumber? {
+    return SNumber(string, radix: radix)
   }
 
   private func run(cases: [StringTestCases.TestCase],
@@ -348,7 +348,7 @@ class BigIntStringInitTests: XCTestCase {
       // lowercased
       do {
         let result = self.create(string: input.lowercased(), radix: radix)
-        let heap = BigIntPrototype(isNegative: false, words: words)
+        let heap = SNumberPrototype(isNegative: false, words: words)
         let expected = heap.create()
         XCTAssertEqual(result, expected, input, file: file, line: line)
       }
@@ -356,7 +356,7 @@ class BigIntStringInitTests: XCTestCase {
       // uppercased
       do {
         let result = self.create(string: input.uppercased(), radix: radix)
-        let heap = BigIntPrototype(isNegative: false, words: words)
+        let heap = SNumberPrototype(isNegative: false, words: words)
         let expected = heap.create()
         XCTAssertEqual(result, expected, input, file: file, line: line)
       }
@@ -364,7 +364,7 @@ class BigIntStringInitTests: XCTestCase {
       // '+' sign
       do {
         let result = self.create(string: "+" + input, radix: radix)
-        let heap = BigIntPrototype(isNegative: false, words: words)
+        let heap = SNumberPrototype(isNegative: false, words: words)
         let expected = heap.create()
         XCTAssertEqual(result, expected, input, file: file, line: line)
       }
@@ -373,7 +373,7 @@ class BigIntStringInitTests: XCTestCase {
       do {
         assert(!words.isEmpty, "-0 should be handled differently")
         let result = self.create(string: "-" + input, radix: radix)
-        let heap = BigIntPrototype(isNegative: true, words: words)
+        let heap = SNumberPrototype(isNegative: true, words: words)
         let expected = heap.create()
         XCTAssertEqual(result, expected, input, file: file, line: line)
       }

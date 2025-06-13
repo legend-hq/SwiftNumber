@@ -2,17 +2,17 @@
 // https://github.com/LiarPrincess/Violet
 
 import XCTest
-@testable import BigInt
+@testable import SwiftNumber
 
 // swiftlint:disable type_name
 
-private typealias Word = BigInt.Word
+private typealias Word = SNumber.Word
 
 /// Operations for which exists 'reverse' operation that undoes its effect.
 /// For example for addition it is subtraction: `(n + x) - x = n`.
 class ApplyA_UndoA: XCTestCase {
 
-  private lazy var values = generateBigIntValues(countButNotReally: 20)
+  private lazy var values = generateSNumberValues(countButNotReally: 20)
   private lazy var pairs = allPossiblePairings(lhs: self.values, rhs: self.values)
 
   // MARK: - Tests
@@ -62,7 +62,7 @@ class ApplyA_UndoA: XCTestCase {
 
       for radix in [2, 5, 10, 16] {
         let string = String(value, radix: radix)
-        guard let int = BigInt(string, radix: radix) else {
+        guard let int = SNumber(string, radix: radix) else {
           XCTFail("string: \(string), radix: \(radix)")
           continue
         }
@@ -74,7 +74,7 @@ class ApplyA_UndoA: XCTestCase {
 
   // MARK: - Helpers
 
-  private func create(_ p: BigIntPrototype) -> BigInt {
+  private func create(_ p: SNumberPrototype) -> SNumber {
     return p.create()
   }
 }
