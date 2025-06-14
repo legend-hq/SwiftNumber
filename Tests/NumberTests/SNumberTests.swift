@@ -728,4 +728,39 @@ class SNumberTests: XCTestCase {
 
     }
 
+    func testConversionsToNumber() {
+        let number = SNumber(123456789)
+        let number2 = number.asNumber
+        XCTAssertEqual(number2, Number(123456789))
+
+        let number3 = SNumber(-10)
+        XCTAssertThrowsError(try number3.toNumber()) { error in
+            XCTAssertEqual(error as? SNumber.ConversionError, SNumber.ConversionError.sNumberNegative)
+        }
+    }
+
+    func testConversionsToInt() {
+        let number = SNumber(123456789)
+        let int = try? number.toInt()
+        XCTAssertEqual(int, 123456789)
+
+        let number2 = SNumber(-123456789)
+        let int2 = try? number2.toInt()
+        XCTAssertEqual(int2, -123456789)
+
+        let number3 = SNumber("99999999999999999999999999999999999999999999999999999999")
+        XCTAssertThrowsError(try number3.toInt()) { error in
+            XCTAssertEqual(error as? SNumber.ConversionError, SNumber.ConversionError.sNumberTooLarge)
+        }
+
+        let number4 = SNumber("-99999999999999999999999999999999999999999999999999999999")
+        XCTAssertThrowsError(try number4.toInt()) { error in
+            XCTAssertEqual(error as? SNumber.ConversionError, SNumber.ConversionError.sNumberTooSmall)
+        }
+    }
+
+    func testPow10() {
+        let number = SNumber.pow10(18)
+        XCTAssertEqual(number, SNumber("1000000000000000000"))
+    }
 }

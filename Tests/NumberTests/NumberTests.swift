@@ -1570,4 +1570,41 @@ class NumberTests: XCTestCase {
         let limit = Number(UInt64.max) * Number(UInt64.max) * Number(UInt64.max)
         check { Number.randomInteger(lessThan: limit, using: &$0) }
     }
+
+    func testConversionsToSNumber() {
+        let number = Number(123456789)
+        let sNumber = number.asSNumber
+        let int = try? number.toInt()
+        XCTAssertEqual(int, 123456789)
+    }
+
+    func testConversionsToInt() {
+        let number = Number(123456789)
+        let int = try? number.toInt()
+        XCTAssertEqual(int, 123456789)
+
+        let number2 = Number("99999999999999999999999999999999999999999999999999999999")
+        XCTAssertThrowsError(try number2.toInt()) { error in
+            XCTAssertEqual(error as? Number.ConversionError, Number.ConversionError.sNumberTooLarge)
+        }
+    }
+
+    func testPow10() {
+        let number = Number.pow10(18)
+        XCTAssertEqual(number, Number("1000000000000000000"))
+    }
+
+    func testStringAndPrecision() {
+        let number = Number("123456789.123456789", andPrecision: 18)
+        XCTAssertEqual(number, Number("123456789123456789000000000"))
+
+        let number2 = Number("123456789.123456789", andPrecision: 0)
+        XCTAssertEqual(number2, Number("123456789"))
+
+        let number3 = Number("123456789.123456789", andPrecision: 1)
+        XCTAssertEqual(number3, Number("1234567891"))
+
+        let number4 = Number("fff.vv", andPrecision: 1)
+        XCTAssertEqual(number4, nil)
+    }
 }

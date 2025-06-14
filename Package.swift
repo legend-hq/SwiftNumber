@@ -13,9 +13,9 @@ import PackageDescription
 let package = Package(
     name: "SwiftNumber",
     platforms: [
-        .macOS(.v10_13),
-        .iOS(.v12),
-        .tvOS(.v12),
+        .macOS(.v13),
+        .iOS(.v13),
+        .tvOS(.v13),
         .watchOS(.v4),
         .macCatalyst(.v13),
         .visionOS(.v1),
