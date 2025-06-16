@@ -1576,6 +1576,7 @@ class NumberTests: XCTestCase {
         let sNumber = number.asSNumber
         let int = try? number.toInt()
         XCTAssertEqual(int, 123456789)
+        XCTAssertEqual(sNumber, SNumber(123456789))
     }
 
     func testConversionsToInt() {
@@ -1592,6 +1593,9 @@ class NumberTests: XCTestCase {
     func testPow10() {
         let number = Number.pow10(18)
         XCTAssertEqual(number, Number("1000000000000000000"))
+
+        let number2 = Number(.pow10(18))
+        XCTAssertEqual(number2, Number("1000000000000000000"))
     }
 
     func testStringAndPrecision() {
