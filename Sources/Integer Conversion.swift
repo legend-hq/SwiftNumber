@@ -38,6 +38,10 @@ extension Number {
             self.init(words: source.words)
         }
     }
+
+    public init(_ integer: Number) {
+        self.init(words: integer.words)
+    }
 }
 
 extension SNumber {
