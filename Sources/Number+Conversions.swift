@@ -8,17 +8,33 @@
 
 public extension Number {
     enum ConversionError: Error {
-        case sNumberTooLarge
+        case numberTooLarge
     }
 
+    /// Returns an SNumber, which is always safe
     var asSNumber: SNumber {
         SNumber(self)
     }
 
-    func toInt() throws -> Int {
-        guard self <= Number(Int.max) else {
-            throw ConversionError.sNumberTooLarge
+    /// Returns a UInt, returning nil on a conversion failure
+    var uInt: UInt? {
+        if self <= Number(UInt.max) {
+            UInt(self)
+        } else {
+            nil
         }
-        return Int(self)
+    }
+
+    /// Returns a UInt, panicking on conversion failure
+    var asUInt: UInt {
+        try! toUInt()
+    }
+
+    /// Returns a UInt, throwing on conversion failure
+    func toUInt() throws -> UInt {
+        guard self <= Number(UInt.max) else {
+            throw ConversionError.numberTooLarge
+        }
+        return UInt(self)
     }
 }

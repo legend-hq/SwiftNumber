@@ -26,6 +26,22 @@ public extension SNumber {
         Number(self)
     }
 
+    /// Returns an Int, returning nil on conversion failure
+    var int: Int? {
+        guard self <= SNumber(Int.max) else {
+            return nil
+        }
+        guard self >= SNumber(Int.min) else {
+            return nil
+        }
+        return Int(self)
+    }
+
+    /// Returns an Int, panicking on conversion failure
+    var asInt: Int {
+        try! toInt()
+    }
+
     /// Returns an Int, throwing on conversion failure
     func toInt() throws -> Int {
         guard self <= SNumber(Int.max) else {

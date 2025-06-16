@@ -729,9 +729,9 @@ class SNumberTests: XCTestCase {
     }
 
     func testConversionsToNumber() {
-        let number = SNumber(123456789)
+        let number = SNumber(123_456_789)
         let number2 = number.asNumber
-        XCTAssertEqual(number2, Number(123456789))
+        XCTAssertEqual(number2, Number(123_456_789))
 
         let number3 = SNumber(-10)
         XCTAssertThrowsError(try number3.toNumber()) { error in
@@ -740,13 +740,13 @@ class SNumberTests: XCTestCase {
     }
 
     func testConversionsToInt() {
-        let number = SNumber(123456789)
+        let number = SNumber(123_456_789)
         let int = try? number.toInt()
-        XCTAssertEqual(int, 123456789)
+        XCTAssertEqual(int, 123_456_789)
 
-        let number2 = SNumber(-123456789)
+        let number2 = SNumber(-123_456_789)
         let int2 = try? number2.toInt()
-        XCTAssertEqual(int2, -123456789)
+        XCTAssertEqual(int2, -123_456_789)
 
         let number3 = SNumber("99999999999999999999999999999999999999999999999999999999")
         XCTAssertThrowsError(try number3.toInt()) { error in
@@ -757,6 +757,20 @@ class SNumberTests: XCTestCase {
         XCTAssertThrowsError(try number4.toInt()) { error in
             XCTAssertEqual(error as? SNumber.ConversionError, SNumber.ConversionError.sNumberTooSmall)
         }
+    }
+
+    func testConversionsToIntProerty() {
+        let number1 = SNumber(123_456_789)
+        XCTAssertEqual(number1.int, 123_456_789)
+
+        let number2 = SNumber(-123_456_789)
+        XCTAssertEqual(number2.int, -123_456_789)
+
+        let number3 = SNumber("99999999999999999999999999999999999999999999999999999999")
+        XCTAssertEqual(number3.int, nil)
+
+        let number4 = SNumber("-99999999999999999999999999999999999999999999999999999999")
+        XCTAssertEqual(number4.int, nil)
     }
 
     func testPow10() {
