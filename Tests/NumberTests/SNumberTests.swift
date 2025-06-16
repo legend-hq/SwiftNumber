@@ -762,5 +762,8 @@ class SNumberTests: XCTestCase {
     func testPow10() {
         let number = SNumber.pow10(18)
         XCTAssertEqual(number, SNumber("1000000000000000000"))
+
+        let number2 = SNumber(.pow10(18))
+        XCTAssertEqual(number2, SNumber("1000000000000000000"))
     }
 }
