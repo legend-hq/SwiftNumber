@@ -1572,21 +1572,29 @@ class NumberTests: XCTestCase {
     }
 
     func testConversionsToSNumber() {
-        let number = Number(123456789)
+        let number = Number(123_456_789)
         let sNumber = number.asSNumber
-        let int = try? number.toInt()
-        XCTAssertEqual(int, 123456789)
+        let int = try? number.toUInt()
+        XCTAssertEqual(int, 123_456_789)
     }
 
-    func testConversionsToInt() {
-        let number = Number(123456789)
-        let int = try? number.toInt()
-        XCTAssertEqual(int, 123456789)
+    func testConversionsToUInt() {
+        let number = Number(123_456_789)
+        let int = try? number.toUInt()
+        XCTAssertEqual(int, 123_456_789)
 
         let number2 = Number("99999999999999999999999999999999999999999999999999999999")
-        XCTAssertThrowsError(try number2.toInt()) { error in
-            XCTAssertEqual(error as? Number.ConversionError, Number.ConversionError.sNumberTooLarge)
+        XCTAssertThrowsError(try number2.toUInt()) { error in
+            XCTAssertEqual(error as? Number.ConversionError, Number.ConversionError.numberTooLarge)
         }
+    }
+
+    func testConversionsToUIntProperty() {
+        let number1 = Number(123_456_789)
+        XCTAssertEqual(number1.uInt, 123_456_789)
+
+        let number2 = Number("99999999999999999999999999999999999999999999999999999999")
+        XCTAssertEqual(number2.uInt, nil)
     }
 
     func testPow10() {
