@@ -37,4 +37,26 @@ public extension Number {
         }
         return UInt(self)
     }
+
+    /// Returns an Int, returning nil on a conversion failure
+    var int: Int? {
+        if self <= Number(Int.max) {
+            Int(self)
+        } else {
+            nil
+        }
+    }
+
+    /// Returns an Int, panicking on conversion failure
+    var asInt: Int {
+        try! toInt()
+    }
+
+    /// Returns an Int, throwing on conversion failure
+    func toInt() throws -> Int {
+        guard self <= Number(Int.max) else {
+            throw ConversionError.numberTooLarge
+        }
+        return Int(self)
+    }
 }
