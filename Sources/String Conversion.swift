@@ -183,12 +183,53 @@ extension Number: ExpressibleByStringLiteral {
     }
 
     /// Initialize a new Number from a decimal number represented by a string literal of arbitrary length.
-    /// The string must contain only decimal digits.
+    /// The string must contain only decimal digits, or be in scientific notation format (e.g., "5.1e6").
     public init(stringLiteral value: StringLiteralType) {
-        if let value = Number(value, radix: 10) {
-            self = value
+        // Check for scientific notation
+        if let eIndex = value.firstIndex(of: "e") {
+            let mantissa = String(value[..<eIndex])
+            let exponentStr = String(value[value.index(after: eIndex)...])
+            
+            // Parse exponent
+            guard let exponent = Int(exponentStr), exponent >= 0 else {
+                fatalError("Invalid scientific notation: \(value)")
+            }
+            
+            // Check if mantissa has decimal point
+            if let dotIndex = mantissa.firstIndex(of: ".") {
+                let integerPart = String(mantissa[..<dotIndex])
+                let fractionalPart = String(mantissa[mantissa.index(after: dotIndex)...])
+                
+                // Validate that fractional part doesn't exceed the precision allowed by exponent
+                if fractionalPart.count > exponent {
+                    fatalError("Too many decimal places for precision: \(value)")
+                }
+                
+                // Construct the full number by shifting decimal point
+                let zerosToAdd = exponent - fractionalPart.count
+                let fullNumber = integerPart + fractionalPart + String(repeating: "0", count: zerosToAdd)
+                
+                if let result = Number(fullNumber, radix: 10) {
+                    self = result
+                } else {
+                    fatalError("Invalid number: \(value)")
+                }
+            } else {
+                // No decimal point, just append zeros
+                let fullNumber = mantissa + String(repeating: "0", count: exponent)
+                if let result = Number(fullNumber, radix: 10) {
+                    self = result
+                } else {
+                    fatalError("Invalid number: \(value)")
+                }
+            }
         } else {
-            fatalError("Invalid number: \(value)")
+            // Regular decimal number
+            if let value = Number(value, radix: 10) {
+                self = value
+            } else {
+                fatalError("Invalid number: \(value)")
+            }
         }
     }
 }
@@ -207,9 +248,71 @@ extension SNumber: ExpressibleByStringLiteral {
     }
 
     /// Initialize a new SNumber from a decimal number represented by a string literal of arbitrary length.
-    /// The string must contain only decimal digits.
+    /// The string must contain only decimal digits (optionally with a sign), or be in scientific notation format (e.g., "-1.2e18").
     public init(stringLiteral value: StringLiteralType) {
-        self = SNumber(value, radix: 10)!
+        var workingValue = value
+        var isNegative = false
+        
+        // Check for sign
+        if workingValue.hasPrefix("-") {
+            isNegative = true
+            workingValue = String(workingValue.dropFirst())
+        } else if workingValue.hasPrefix("+") {
+            workingValue = String(workingValue.dropFirst())
+        }
+        
+        // Check for scientific notation
+        if let eIndex = workingValue.firstIndex(of: "e") {
+            let mantissa = String(workingValue[..<eIndex])
+            let exponentStr = String(workingValue[workingValue.index(after: eIndex)...])
+            
+            // Parse exponent
+            guard let exponent = Int(exponentStr), exponent >= 0 else {
+                fatalError("Invalid scientific notation: \(value)")
+            }
+            
+            // Check if mantissa has decimal point
+            if let dotIndex = mantissa.firstIndex(of: ".") {
+                let integerPart = String(mantissa[..<dotIndex])
+                let fractionalPart = String(mantissa[mantissa.index(after: dotIndex)...])
+                
+                // Validate that fractional part doesn't exceed the precision allowed by exponent
+                if fractionalPart.count > exponent {
+                    fatalError("Too many decimal places for precision: \(value)")
+                }
+                
+                // Construct the full number by shifting decimal point
+                let zerosToAdd = exponent - fractionalPart.count
+                let fullNumber = integerPart + fractionalPart + String(repeating: "0", count: zerosToAdd)
+                
+                if let number = Number(fullNumber, radix: 10) {
+                    self = SNumber(number)
+                    if isNegative {
+                        self.negate()
+                    }
+                } else {
+                    fatalError("Invalid number: \(value)")
+                }
+            } else {
+                // No decimal point, just append zeros
+                let fullNumber = mantissa + String(repeating: "0", count: exponent)
+                if let number = Number(fullNumber, radix: 10) {
+                    self = SNumber(number)
+                    if isNegative {
+                        self.negate()
+                    }
+                } else {
+                    fatalError("Invalid number: \(value)")
+                }
+            }
+        } else {
+            // Regular decimal number
+            if let result = SNumber(value, radix: 10) {
+                self = result
+            } else {
+                fatalError("Invalid number: \(value)")
+            }
+        }
     }
 }
 
