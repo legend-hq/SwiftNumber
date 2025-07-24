@@ -51,7 +51,7 @@ extension Number {
         guard integer.sign == .plus else { return nil }
         assert(integer.floatingPointClass == .positiveNormal)
 
-        #if os(Linux) || os(Windows)
+        #if os(Linux) || os(Windows) || os(WASI)
         // `Decimal._mantissa` has an internal access level on linux, and it might get
         // deprecated in the future, so keeping the string implementation around for now.
         let significand = Number("\(integer.significand)")!
@@ -165,7 +165,7 @@ public extension Decimal {
 }
 #endif
 
-#if canImport(Foundation) && !(os(Linux) || os(Windows))
+#if canImport(Foundation) && !(os(Linux) || os(Windows) || os(WASI))
 private extension Decimal {
     var mantissaParts: [UInt16] {
         [
